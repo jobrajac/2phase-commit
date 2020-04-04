@@ -1,0 +1,2141 @@
+<!DOCTYPE html>
+<html itemscope="" itemtype="http://schema.org/QAPage" class="html__responsive"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+        <title>database - Two phase commit - Stack Overflow</title>
+        <link rel="shortcut icon" href="https://cdn.sstatic.net/Sites/stackoverflow/img/favicon.ico?v=4f32ecc8f43d">
+        <link rel="apple-touch-icon" href="https://cdn.sstatic.net/Sites/stackoverflow/img/apple-touch-icon.png?v=c78bd457575a">
+        <link rel="image_src" href="https://cdn.sstatic.net/Sites/stackoverflow/img/apple-touch-icon.png?v=c78bd457575a"> 
+        <link rel="search" type="application/opensearchdescription+xml" title="Stack Overflow" href="https://stackoverflow.com/opensearch.xml">
+        <link rel="canonical" href="https://stackoverflow.com/questions/7389382/two-phase-commit">
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://stackoverflow.com/questions/7389382/two-phase-commit">
+        <meta property="og:site_name" content="Stack Overflow">
+        <meta property="og:image" itemprop="image primaryImageOfPage" content="https://cdn.sstatic.net/Sites/stackoverflow/img/apple-touch-icon@2.png?v=73d79a89bded">
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:domain" content="stackoverflow.com">
+        <meta name="twitter:title" property="og:title" itemprop="name" content="Two phase commit">
+        <meta name="twitter:description" property="og:description" itemprop="description" content="I believe most of people know what 2PC (two-phase commit protocol) is and how to use it in Java or most of modern languages. Basically, it is used to make sure the transactions are in sync when you...">
+
+        <script async="" src="Filer_for_database%20-%20Two%20phase%20commit%20-%20Stack%20Overflow/quant.js"></script><script async="" src="Filer_for_database%20-%20Two%20phase%20commit%20-%20Stack%20Overflow/beacon.js"></script><script async="" src="Filer_for_database%20-%20Two%20phase%20commit%20-%20Stack%20Overflow/analytics.js"></script><script src="Filer_for_database%20-%20Two%20phase%20commit%20-%20Stack%20Overflow/jquery.js"></script>
+        <script src="Filer_for_database%20-%20Two%20phase%20commit%20-%20Stack%20Overflow/stub.js"></script>
+    
+        <link rel="stylesheet" type="text/css" href="Filer_for_database%20-%20Two%20phase%20commit%20-%20Stack%20Overflow/stacks.css">
+        <link rel="stylesheet" type="text/css" href="Filer_for_database%20-%20Two%20phase%20commit%20-%20Stack%20Overflow/primary.css">
+
+    
+            <link rel="alternate" type="application/atom+xml" title="Feed for question 'Two phase commit'" href="https://stackoverflow.com/feeds/question/7389382">
+            <meta name="twitter:app:country" content="US">
+            <meta name="twitter:app:name:iphone" content="Stack Exchange iOS">
+            <meta name="twitter:app:id:iphone" content="871299723">
+            <meta name="twitter:app:url:iphone" content="se-zaphod://stackoverflow.com/questions/7389382/two-phase-commit">
+            <meta name="twitter:app:name:ipad" content="Stack Exchange iOS">
+            <meta name="twitter:app:id:ipad" content="871299723">
+            <meta name="twitter:app:url:ipad" content="se-zaphod://stackoverflow.com/questions/7389382/two-phase-commit">
+            <meta name="twitter:app:name:googleplay" content="Stack Exchange Android">
+            <meta name="twitter:app:url:googleplay" content="http://stackoverflow.com/questions/7389382/two-phase-commit">
+            <meta name="twitter:app:id:googleplay" content="com.stackexchange.marvin">
+        <script>
+            StackExchange.ready(function () {
+
+                    StackExchange.using("snippets", function () {
+                        StackExchange.snippets.initSnippetRenderer();
+                    });
+                    
+                StackExchange.using("postValidation", function () {
+                    StackExchange.postValidation.initOnBlurAndSubmit($('#post-form'), 2, 'answer');
+                });
+
+
+                StackExchange.question.init({showAnswerHelp:true,totalCommentCount:0,shownCommentCount:0,questionId:7389382});
+
+                styleCode();
+
+                    StackExchange.realtime.subscribeToQuestion('1', '7389382');
+                    StackExchange.using("gps", function () { StackExchange.gps.trackOutboundClicks('#content', '.post-text'); });
+
+            });
+        </script>
+
+        
+        
+        
+        
+        
+        
+        
+
+
+    <script>
+        StackExchange.init({"locale":"en","serverTime":1586017503,"routeName":"Questions/Show","stackAuthUrl":"https://stackauth.com","networkMetaHostname":"meta.stackexchange.com","site":{"name":"Stack Overflow","description":"Q&A for professional and enthusiast programmers","isNoticesTabEnabled":true,"enableNewTagCreationWarning":true,"insertSpaceAfterNameTabCompletion":false,"id":1,"childUrl":"https://meta.stackoverflow.com","negativeVoteScoreFloor":null,"enableSocialMediaInSharePopup":true,"protocol":"https"},"user":{"fkey":"dde09abba620fb758c6b5d6a00c08dc3b49d4d5f320222f736a541e56cbee977","tid":"c709efb8-6aeb-ae9f-a837-0540a1fcc932","rep":0,"isAnonymous":true,"isAnonymousNetworkWide":true},"events":{"postType":{"question":1},"postEditionSection":{"title":1,"body":2,"tags":3}},"story":{"minCompleteBodyLength":75,"likedTagsMaxLength":300,"dislikedTagsMaxLength":300},"jobPreferences":{"maxNumDeveloperRoles":2,"maxNumIndustries":4},"svgIconPath":"https://cdn.sstatic.net/Img/svg-icons","svgIconHash":"16d35cd07f3a"}, {"userProfile":{"openGraphAPIKey":"4a307e43-b625-49bb-af15-ffadf2bda017"},"userMessaging":{"showNewFeatureNotice":true},"tags":{},"snippets":{"renderDomain":"stacksnippets.net","snippetsEnabled":true},"slack":{"sidebarAdDismissCookie":"slack-sidebar-ad"},"site":{"allowImageUploads":true,"enableImgurHttps":true,"enableUserHovercards":true,"forceHttpsImages":true,"styleCode":true},"paths":{},"monitoring":{"clientTimingsAbsoluteTimeout":30000,"clientTimingsDebounceTimeout":1000},"mentions":{"maxNumUsersInDropdown":50},"markdown":{"asteriskIntraWordEmphasis":true},"flags":{"allowRetractingCommentFlags":true,"allowRetractingFlags":true},"comments":{},"accounts":{"currentPasswordRequiredForChangingStackIdPassword":true}});
+        StackExchange.using.setCacheBreakers({"js/adops.en.js":"22a9bd59b1e9","js/ask.en.js":"e45eceed2dac","js/begin-edit-event.en.js":"cb9965ad8784","js/events.en.js":"8fd8a10eb1c1","js/explore-qlist.en.js":"8498d0bb288b","js/full-anon.en.js":"ff4176be6582","js/full.en.js":"9bb8aedce953","js/help.en.js":"3e2f8d619378","js/inline-tag-editing.en.js":"ba6fb20dd10f","js/keyboard-shortcuts.en.js":"fe0bb943fb4e","js/mobile.en.js":"69be24692c04","js/moderator.en.js":"d04b4a3a2447","js/post-validation.en.js":"5fbaa1bb0a8c","js/prettify-full.en.js":"7adf8f569812","js/question-editor.en.js":"","js/review.en.js":"8abdd03b1987","js/revisions.en.js":"14529f3b0e3e","js/tageditor.en.js":"8b3e172b89a9","js/tageditornew.en.js":"41324820423e","js/tagsuggestions.en.js":"9b2c5d9791d2","js/wmd.en.js":"b8eedc2cc2d1","js/snippet-javascript-codemirror.en.js":"cc5cdfe6131f"});
+        StackExchange.using("gps", function() {
+             StackExchange.gps.init(true);
+        });
+    </script>
+    <noscript id="noscript-css"><style>body,.top-bar{margin-top:1.9em}</style></noscript>
+    <script async="" src="Filer_for_database%20-%20Two%20phase%20commit%20-%20Stack%20Overflow/full-anon.js"></script><script async="" src="Filer_for_database%20-%20Two%20phase%20commit%20-%20Stack%20Overflow/post-validation.js"></script><link rel="stylesheet" href="Filer_for_database%20-%20Two%20phase%20commit%20-%20Stack%20Overflow/clc.css" type="text/css"></head>
+    <body class="question-page unified-theme">
+    <div id="notify-container"></div>
+    <div id="custom-header"></div>
+        
+<header class="top-bar js-top-bar top-bar__network _fixed">
+    <div class="wmx12 mx-auto grid ai-center h100" role="menubar">
+        <div class="-main grid--cell">
+                <a href="#" class="left-sidebar-toggle p0 ai-center jc-center js-left-sidebar-toggle" role="menuitem" aria-haspopup="true" aria-controls="left-sidebar" aria-expanded="false"><span class="ps-relative"></span></a>
+                <div class="topbar-dialog leftnav-dialog js-leftnav-dialog dno">
+                    <div class="left-sidebar js-unpinned-left-sidebar" data-can-be="left-sidebar" data-is-here-when="sm"></div>
+                </div>
+                    <a href="https://stackoverflow.com/" class="-logo js-gps-track" data-gps-track="top_nav.click({is_current:false, location:2, destination:8})">
+                        <span class="-img _glyph">Stack Overflow</span>
+                    </a>
+
+
+
+        </div>
+
+            <ol class="list-reset grid gs4" role="presentation">
+                <li class="grid--cell">
+                    <a href="#" class="-marketing-link js-gps-track js-products-menu" aria-controls="products-popover" data-controller="s-popover" data-action="s-popover#toggle" data-s-popover-placement="bottom" data-gps-track="top_nav.products.click({location:2, destination:1})" data-ga="[&quot;top navigation&quot;,&quot;products menu click&quot;,null,null,null]">
+                        Products
+                    </a>
+                </li>
+
+                    <li class="grid--cell md:d-none">
+                        <a href="https://stackoverflow.com/teams/customers" class="-marketing-link js-gps-track" data-gps-track="top_nav.products.click({location:2, destination:7})" data-ga="[&quot;top navigation&quot;,&quot;customers menu click&quot;,null,null,null]">Customers</a>
+                    </li>
+                    <li class="grid--cell md:d-none">
+                        <a href="https://stackoverflow.com/teams/use-cases" class="-marketing-link js-gps-track" data-gps-track="top_nav.products.click({location:2, destination:8})" data-ga="[&quot;top navigation&quot;,&quot;use cases menu click&quot;,null,null,null]">Use cases</a>
+                    </li>
+            </ol>
+            <div class="s-popover ws2 p6" id="products-popover" role="menu" aria-hidden="true">
+                <div class="s-popover--arrow"></div>
+                <ol class="list-reset s-anchors s-anchors__inherit">
+                    <li>
+                        <a href="https://stackoverflow.com/questions" class="d-block py6 px6 bar-sm h:bg-orange-500 h:fc-white js-gps-track" data-gps-track="top_nav.products.click({location:2, destination:2})" data-ga="[&quot;top navigation&quot;,&quot;public qa submenu click&quot;,null,null,null]">
+                            <span class="fs-body1 d-block">Stack Overflow</span>
+                            <span class="fs-caption d-block o70">Public questions and answers</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://stackoverflow.com/teams" class="d-block py6 px6 bar-sm h:bg-orange-500 h:fc-white js-gps-track" data-gps-track="top_nav.products.click({location:2, destination:3})" data-ga="[&quot;top navigation&quot;,&quot;teams submenu click&quot;,null,null,null]">
+                            <span class="fs-body1 d-block">Teams</span>
+                            <span class="fs-caption d-block o70">Private questions and answers for your team</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://stackoverflow.com/enterprise" class="d-block py6 px6 bar-sm h:bg-orange-500 h:fc-white js-gps-track" data-gps-track="top_nav.products.click({location:2, destination:4})" data-ga="[&quot;top navigation&quot;,&quot;enterprise submenu click&quot;,null,null,null]">
+                            <span class="fs-body1 d-block">Enterprise</span>
+                            <span class="fs-caption d-block o70">Private self-hosted questions and answers for your enterprise</span>
+                        </a>
+                    </li>
+                    <li class="bt bc-black-3 mln6 mrn6 mt6 pt6 px6">
+                        <a href="https://stackoverflow.com/talent" class="d-block py6 px6 bar-sm h:bg-orange-500 h:fc-white js-gps-track" data-gps-track="top_nav.products.click({location:2, destination:5})" data-ga="[&quot;top navigation&quot;,&quot;talent submenu click&quot;,null,null,null]">
+                            <span class="fs-body1 d-block">Talent</span>
+                            <span class="fs-caption d-block o70">Hire technical talent</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://stackoverflow.com/advertising" class="d-block py6 px6 bar-sm h:bg-orange-500 h:fc-white js-gps-track" data-gps-track="top_nav.products.click({location:2, destination:6})" data-ga="[&quot;top navigation&quot;,&quot;advertising submenu click&quot;,null,null,null]">
+                            <span class="fs-body1 d-block">Advertising</span>
+                            <span class="fs-caption d-block o70">Reach developers worldwide</span>
+                        </a>
+                    </li>
+
+                </ol>
+            </div>
+
+            <form id="search" role="search" action="/search" method="get" class="grid--cell fl-grow1 searchbar px12 js-searchbar " autocomplete="off">
+                    <div class="ps-relative">
+                        <input name="q" type="text" placeholder="Search…" autocomplete="off" maxlength="240" class="s-input s-input__search js-search-field " aria-label="Search" aria-controls="top-search" data-controller="s-popover" data-action="focus-&gt;s-popover#show" data-s-popover-placement="bottom-start">
+                        <svg aria-hidden="true" class="svg-icon s-input-icon s-input-icon__search iconSearch" width="18" height="18" viewBox="0 0 18 18"><path d="M18 16.5l-5.14-5.18h-.35a7 7 0 1 0-1.19 1.19v.35L16.5 18l1.5-1.5zM12 7A5 5 0 1 1 2 7a5 5 0 0 1 10 0z"></path></svg>
+                        <div class="s-popover p0 wmx100 wmn4 sm:wmn-initial js-top-search-popover s-popover--arrow__tl" id="top-search" role="menu">
+    <div class="js-spinner p24 grid ai-center jc-center d-none">
+        <div class="s-spinner s-spinner__sm fc-orange-400">
+            <div class="v-visible-sr">Loading…</div>
+        </div>
+    </div>
+
+    <span class="v-visible-sr js-screen-reader-info"></span>
+    <div class="js-ac-results overflow-y-auto hmx3 d-none"></div>
+
+    <div class="js-search-hints" aria-describedby="Tips for searching"></div>
+</div>
+                    </div>
+            </form>
+        
+        
+
+<ol class="overflow-x-auto ml-auto -secondary grid ai-center list-reset h100 user-logged-out" role="presentation">
+        <li class="-item searchbar-trigger"><a href="#" class="-link js-searchbar-trigger" role="button" aria-label="Search" aria-haspopup="true" aria-controls="search" title="Click to show search"><svg aria-hidden="true" class="svg-icon iconSearch" width="18" height="18" viewBox="0 0 18 18"><path d="M18 16.5l-5.14-5.18h-.35a7 7 0 1 0-1.19 1.19v.35L16.5 18l1.5-1.5zM12 7A5 5 0 1 1 2 7a5 5 0 0 1 10 0z"></path></svg></a></li>
+
+            <li class="-ctas">
+                            <a href="https://stackoverflow.com/users/login?ssrc=head&amp;returnurl=https%3a%2f%2fstackoverflow.com%2fquestions%2f7389382%2ftwo-phase-commit" class="login-link s-btn s-btn__filled py8 js-gps-track" rel="nofollow" data-gps-track="login.click" data-ga="[&quot;top navigation&quot;,&quot;login button click&quot;,null,null,null]">Log in</a>
+                            <a href="https://stackoverflow.com/users/signup?ssrc=head&amp;returnurl=%2fusers%2fstory%2fcurrent" class="login-link s-btn s-btn__primary py8" rel="nofollow" data-ga="[&quot;sign up&quot;,&quot;Sign Up Navigation&quot;,&quot;Header&quot;,null,null]">Sign up</a>
+
+            </li>
+
+    <li class="js-topbar-dialog-corral" role="presentation">
+            
+
+    <div class="topbar-dialog siteSwitcher-dialog dno" role="menu">
+        <div class="header">
+            <h3>
+                <a href="https://stackoverflow.com/">current community</a>
+            </h3>
+        </div>
+        <div class="modal-content bg-powder-050">
+            <ul class="current-site">
+                    <li class="grid">
+                            <div class="fl1">
+                <a href="https://stackoverflow.com/" class="current-site-link site-link js-gps-track grid gs8 gsx" data-id="1" data-gps-track="site_switcher.click({ item_type:3 })">
+        <div class="favicon favicon-stackoverflow site-icon grid--cell" title="Stack Overflow"></div>
+        <span class="grid--cell fl1">
+            Stack Overflow
+        </span>
+    </a>
+
+    </div>
+    <div class="related-links">
+            <a href="https://stackoverflow.com/help" class="js-gps-track" data-gps-track="site_switcher.click({ item_type:14 })">help</a>
+            <a href="https://chat.stackoverflow.com/" class="js-gps-track" data-gps-track="site_switcher.click({ item_type:6 })">chat</a>
+    </div>
+
+                    </li>
+                    <li class="related-site grid">
+                            <div class="L-shaped-icon-container">
+        <span class="L-shaped-icon"></span>
+    </div>
+
+                            <a href="https://meta.stackoverflow.com/" class=" site-link js-gps-track grid gs8 gsx" data-id="552" data-gps-track="site.switch({ target_site:552, item_type:3 }),site_switcher.click({ item_type:4 })">
+        <div class="favicon favicon-stackoverflowmeta site-icon grid--cell" title="Meta Stack Overflow"></div>
+        <span class="grid--cell fl1">
+            Meta Stack Overflow
+        </span>
+    </a>
+
+                    </li>
+            </ul>
+        </div>
+
+        <div class="header" id="your-communities-header">
+            <h3>
+your communities            </h3>
+
+        </div>
+        <div class="modal-content" id="your-communities-section">
+
+                <div class="call-to-login">
+<a href="https://stackoverflow.com/users/signup?ssrc=site_switcher&amp;returnurl=%2fusers%2fstory%2fcurrent" class="login-link js-gps-track" data-gps-track="site_switcher.click({ item_type:10 })">Sign up</a> or <a href="https://stackoverflow.com/users/login?ssrc=site_switcher&amp;returnurl=https%3a%2f%2fstackoverflow.com%2fquestions%2f7389382%2ftwo-phase-commit" class="login-link js-gps-track" data-gps-track="site_switcher.click({ item_type:11 })">log in</a> to customize your list.                </div>
+        </div>
+
+        <div class="header">
+            <h3><a href="https://stackexchange.com/sites">more stack exchange communities</a>
+            </h3>
+            <a href="https://stackoverflow.blog/" class="fr">company blog</a>
+        </div>
+        <div class="modal-content">
+                <div class="child-content"></div>
+        </div>        
+    </div>
+
+    </li>
+</ol>
+
+    </div>
+</header>
+    
+
+    <script>
+        StackExchange.ready(function () { StackExchange.topbar.init(); });
+StackExchange.scrollPadding.setPaddingTop(50, 10);    </script>
+
+
+                    
+<style type="text/css">
+    .theme-selector {
+        background-color: #2f3337;
+        color: #c8ccd0;
+
+        background-image: url("https://cdn.sstatic.net/Img/preferences/dark-moon@2x.png?v=602a0ecf75b7"), url("https://cdn.sstatic.net/Img/preferences/dark-stars@2x.png?v=f88c36244dc7");
+        background-size: 786px, 1500px;
+        background-repeat: no-repeat, no-repeat;
+        background-position-x: center;
+        animation: background-animation ease-out 2s;
+
+        -webkit-perspective: 0;
+        -webkit-backface-visibility: hidden;
+        -webkit-transform: translate3d(0,0,0);
+        visibility: visible;
+    }
+
+    @media (max-width: 640px) {
+        .theme-selector {
+            background-size: 393px, 750px;
+        }
+    }
+
+    .theme-selection {
+        animation: selector-animation ease-out 3s;
+    }
+
+    .theme-btn:hover {
+        background-color: #000;
+        box-shadow: 0px 1px 0px #424242;
+    }
+
+    .theme-selected {
+        background-color: #1d1d1d;
+        box-shadow: 0px 1px 0px #424242, inset 0px 1px 0px #000000;
+    }
+
+    .theme-title {
+        animation: title-animation ease-out 2s;
+    }
+
+    @keyframes background-animation {
+        0%   { background-position-y: -200px, 50px; }
+        100% { background-position-y: 0, 0; }
+    }
+
+    @keyframes title-animation {
+        0% {
+            opacity: 0;
+            transform: scale(4);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes selector-animation {
+        0% { opacity:0; }
+        60% { opacity:0; }
+        100% { opacity:1; }
+    }
+</style>
+
+
+<div class="theme-selector overflow-hidden z-active bs-md js-theme-selector">
+    <div class="pt128 sm:pt64 pb24 px16 mx-auto wmx12 ps-relative ta-center">
+        <button class="ps-absolute t16 r16 s-btn s-btn__icon js-dismiss js-gps-track" style="color: #cfd2d6; background-color: #4a4e51; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.11),0 2px 6px rgba(0, 0, 0, 0.11),0 3px 8px rgba(0, 0, 0, 0.14)" data-gps-track="announcement_banner.click({ campaign: '2020-03-30.dark-mode-beta', location: 2, action: 1})">
+            <svg aria-hidden="true" class="svg-icon iconClear" width="18" height="18" viewBox="0 0 18 18"><path d="M15 4.41L13.59 3 9 7.59 4.41 3 3 4.41 7.59 9 3 13.59 4.41 15 9 10.41 13.59 15 15 13.59 10.41 9 15 4.41z"></path></svg> Dismiss
+        </button>
+        <div class="mb8">
+            <img class="theme-title ignore-filter" alt="Dark mode beta" src="Filer_for_database%20-%20Two%20phase%20commit%20-%20Stack%20Overflow/dark-title4x.png" width="184" height="19">
+        </div>
+        <div class="theme-selection">
+            <p class="fs-body3 mb24 s-anchors s-anchors__inherit s-anchors__underlined">
+                You’ve been asking for dark mode for <em>years</em>.<br>
+                The <a href="https://stackoverflow.blog/2020/03/30/introducing-dark-mode-for-stack-overflow/">dark mode beta</a> is finally here.
+            </p>
+            <p class="fs-body1 mt24 mb0 s-anchors s-anchors__inherit s-anchors__underlined">
+                Change your <a href="https://stackoverflow.com/users/preferences/current" class="js-gps-track" data-gps-track="announcement_banner.click({campaign: '2020-03-30.dark-mode-beta', location: 2, action: 2})">preferences</a> any time.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    StackExchange.ready(function () {
+
+        $(document).on('click', '.js-theme-selector .js-enable-light-mode, .js-theme-selector .js-enable-dark-mode, .js-theme-selector .js-enable-system-mode', function (e) {
+            e.preventDefault();
+
+            var $this = $(this);
+            $.post("/account/set-theme-preference",
+                {
+                    "fkey": StackExchange.options.user.fkey,
+                    "accountId": StackExchange.options.user.accountId,
+                    "theme": $this.data('theme')
+                })
+                .done(function (response) {
+                    var theme = response.themeClass || '';
+
+                    $('body').removeClass(function (i, oldClassList) {
+                        return (oldClassList.match(/(^|\s)theme-\S+/g) || []).join(' ');
+                    });
+                    $('body').addClass(theme);
+                    $('.js-theme-selector .js-enable-light-mode, .js-theme-selector .js-enable-dark-mode, .js-theme-selector .js-enable-system-mode').removeClass('theme-selected');
+                    $this.addClass('theme-selected');
+                })
+                .fail(function (response) {
+                    var error = JSON.parse(response.responseText).ErrorMessage;
+                    StackExchange.helpers.showToast(error, { type: 'danger' });
+                });
+        });
+
+        $(document).on('click', '.js-theme-selector .js-dismiss', function (e) {
+            e.preventDefault();
+
+            $.cookie('notice-dmb', '4;' + Date.now(), {
+                expires: new Date(1588982400000),
+                path: "/"
+            });
+
+            $('.js-theme-selector').fadeOutAndRemove();
+        });
+    });
+</script>
+
+
+
+    <div class="container">
+            
+
+<div id="left-sidebar" data-is-here-when="md lg" class="left-sidebar js-pinned-left-sidebar ps-relative">
+    <div class="left-sidebar--sticky-container js-sticky-leftnav">
+        <nav role="navigation">
+            <ol class="nav-links">
+        <li class="">
+            <a href="https://stackoverflow.com/" class="pl8 js-gps-track nav-links--link" data-gps-track="top_nav.click({is_current:false, location:2, destination:8})">
+Home            </a>
+        </li>
+                <li>
+                    <ol class="nav-links">
+                            <li class="fs-fine tt-uppercase ml8 mt16 mb4 fc-light">Public</li>
+                                <li class=" youarehere">
+            <a id="nav-questions" href="https://stackoverflow.com/questions" class="pl8 js-gps-track nav-links--link -link__with-icon" data-gps-track="top_nav.click({is_current:true, location:2, destination:1})">
+<svg aria-hidden="true" class="svg-icon iconGlobe" width="18" height="18" viewBox="0 0 18 18"><path d="M9 1a8 8 0 1 0 0 16A8 8 0 0 0 9 1zM8 15.32a6.4 6.4 0 0 1-5.23-7.75L7 11.68v.8c0 .88.12 1.32 1 1.32v1.52zm5.72-2c-.2-.66-1-1.32-1.72-1.32h-1v-2c0-.44-.56-1-1-1H6V7h1c.44 0 1-.56 1-1V5h2c.88 0 1.4-.72 1.4-1.6v-.33a6.4 6.4 0 0 1 2.32 10.24v.01z"></path></svg>                    <span class="-link--channel-name">Stack Overflow</span>
+            </a>
+        </li>
+
+        <li class="">
+            <a id="nav-tags" href="https://stackoverflow.com/tags" class=" js-gps-track nav-links--link" data-gps-track="top_nav.click({is_current:false, location:2, destination:2})">
+Tags            </a>
+        </li>
+        <li class="">
+            <a id="nav-users" href="https://stackoverflow.com/users" class=" js-gps-track nav-links--link" data-gps-track="top_nav.click({is_current:false, location:2, destination:3})">
+Users            </a>
+        </li>
+        <li class="">
+            <a id="nav-jobs" href="https://stackoverflow.com/jobs?so_medium=StackOverflow&amp;so_source=SiteNav" class=" js-gps-track nav-links--link" data-gps-track="top_nav.click({is_current:false, location:2, destination:6})">
+Jobs            </a>
+        </li>
+                    </ol>
+                </li>
+                    <li>
+                        <ol class="nav-links">
+                                <li class="grid ai-center jc-space-between ml8 mt24 mb4">
+                                    <div class="grid--cell tt-uppercase fs-fine fc-light">Teams</div>
+                                    <div class="grid--cell fs-fine fc-light mr4">
+                                        <a href="javascript:void(0)" class="s-link s-link__inherit js-gps-track" role="button" aria-controls="popover-teams-create-cta" data-controller="s-popover" data-action="s-popover#toggle" data-s-popover-placement="bottom-start" data-s-popover-toggle-class="is-selected" data-gps-track="teams.create.left-sidenav.click({ Action: ShowInfo })" data-ga="[&quot;teams left navigation - anonymous&quot;,&quot;left nav show teams info&quot;,null,null,null]">
+                                            What’s this?
+                                        </a>
+
+                                    </div>
+                                </li>
+                                <li class="ps-relative">
+                                    <a href="https://stackoverflow.com/teams" class="pl8 js-gps-track nav-links--link" title="Stack Overflow for Teams is a private, secure spot for your organization's questions and answers." data-gps-track="teams.create.left-sidenav.click({ Action: TeamsClick })" data-ga="[&quot;teams left navigation - anonymous&quot;,&quot;left nav team click&quot;,&quot;stackoverflow.com/teams&quot;,null,null]">
+                                        <div class="grid ai-center">
+                                            <div class="grid--cell s-avatar va-middle bg-orange-400">
+                                                <div class="s-avatar--letter mtn1">
+                                                    <svg aria-hidden="true" class="svg-icon iconBriefcaseSm" width="14" height="14" viewBox="0 0 14 14"><path d="M4 3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1h.5c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5h-7A1.5 1.5 0 0 1 2 10.5v-5C2 4.67 2.67 4 3.5 4H4V3zm5 1V3H5v1h4z"></path></svg>
+                                                </div>
+                                                <svg aria-hidden="true" class="svg-icon native s-avatar--badge iconShieldXSm" width="9" height="10" viewBox="0 0 9 10"><path d="M0 1.84L4.5 0 9 1.84v3.17C9 7.53 6.3 10 4.5 10 2.7 10 0 7.53 0 5.01V1.84z" fill="#fff"></path><path d="M1 2.5L4.5 1 8 2.5v2.51C8 7.34 5.34 9 4.5 9 3.65 9 1 7.34 1 5.01V2.5zm2.98 3.02L3.2 7h2.6l-.78-1.48a.4.4 0 0 1 .15-.38c.34-.24.73-.7.73-1.14 0-.71-.5-1.23-1.41-1.23-.92 0-1.39.52-1.39 1.23 0 .44.4.9.73 1.14.12.08.18.23.15.38z" fill="#6A7E7C"></path></svg>
+                                            </div>
+                                            <div class="grid--cell pl6">
+Free 30 Day Trial                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                        </ol>
+                    </li>
+            </ol>
+        </nav>
+    </div>
+
+
+        <div class="s-popover w-auto p16" id="popover-teams-create-cta" role="menu" aria-hidden="true">
+            <div class="s-popover--arrow"></div>
+
+            <div class="ps-relative overflow-hidden">
+                <p class="mb2"><strong>Teams</strong></p>
+                <p class="mb16 fs-caption fc-medium">Q&amp;A for Work</p>
+                <p class="mb8 fs-caption fc-medium">
+
+                            Stack Overflow for Teams is a private, secure spot for you and
+                            your coworkers to find and share information.
+                                        </p>
+                <a href="https://stackoverflow.com/teams" class="js-gps-track ws-nowrap d-block" data-gps-track="teams.create.left-sidenav.click({ Action: CtaClick })" data-ga="[&quot;teams left navigation - anonymous&quot;,&quot;left nav cta&quot;,&quot;stackoverflow.com/teams&quot;,null,null]">
+Learn more                </a>
+            </div>
+
+            <div class="ps-absolute t8 r8">
+                <svg width="53" height="49" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M49 11l.2 31H18.9L9 49v-7H4V8h31" fill="#CCEAFF"></path><path d="M44.5 19v-.3l-.2-.1-18-13-.1-.1H.5v33h4V46l.8-.6 9.9-6.9h29.3V19z" stroke="#1060E1" stroke-miterlimit="10"></path><path d="M31 2l6-1.5 7 2V38H14.9L5 45v-7H1V6h25l5-4z" fill="#fff"></path><path d="M7 16.5h13m-13 6h14m-14 6h18" stroke="#1060E1" stroke-miterlimit="10"></path><path d="M39 30a14 14 0 1 0 0-28 14 14 0 0 0 0 28z" fill="#FFB935"></path><path d="M50.5 14a13.5 13.5 0 1 1-27 0 13.5 13.5 0 0 1 27 0z" stroke="#F48024" stroke-miterlimit="10"></path><path d="M32.5 21.5v-8h9v8h-9zm2-9.5V9.3A2.5 2.5 0 0 1 37 6.8a2.5 2.5 0 0 1 2.5 2.5V12h-5zm2 3v2m1-2v2" stroke="#fff" stroke-miterlimit="10"></path></svg>
+            </div>
+        </div>
+
+</div>
+
+
+
+        <div id="content" class="snippet-hidden">
+
+            
+<div itemprop="mainEntity" itemscope="" itemtype="http://schema.org/Question">
+    <link itemprop="image" href="https://cdn.sstatic.net/Sites/stackoverflow/img/apple-touch-icon.png?v=c78bd457575a">
+
+    <div class="inner-content clearfix">
+
+        
+
+            <div id="question-header" class="grid sm:fd-column">
+                        <h1 itemprop="name" class="grid--cell fs-headline1 fl1 ow-break-word mb8"><a href="https://stackoverflow.com/questions/7389382/two-phase-commit" class="question-hyperlink">Two phase commit</a></h1>
+
+                <div class="ml12 aside-cta grid--cell print:d-none sm:ml0 sm:mb12 sm:order-first sm:as-end">
+                    
+    <a href="https://stackoverflow.com/questions/ask" class="ws-nowrap s-btn s-btn__primary">
+        Ask Question
+    </a>
+
+                </div>
+            </div>
+            <div class="grid fw-wrap pb8 mb16 bb bc-black-2">
+                    <div class="grid--cell ws-nowrap mr16 mb8" title="2011-09-12 14:21:47Z">
+                        <span class="fc-light mr2">Asked</span>
+                        <time itemprop="dateCreated" datetime="2011-09-12T14:21:47">8 years, 6 months ago</time>
+                    </div>
+                    <div class="grid--cell ws-nowrap mr16 mb8">
+                        <span class="fc-light mr2">Active</span>
+                        <a href="https://stackoverflow.com/questions/7389382/two-phase-commit?lastactivity" class="s-link s-link__inherit" title="2016-04-03 12:49:18Z">4 years ago</a>
+                    </div>
+                    <div class="grid--cell ws-nowrap mb8" title="Viewed 26,979 times">
+                        <span class="fc-light mr2">Viewed</span>
+                        27k times
+                    </div>
+            </div>
+            <div id="mainbar" role="main" aria-label="question and answers">
+
+                
+<div class="question" data-questionid="7389382" id="question">
+
+    <style>.everyoneloves__top-leaderboard:empty,.everyoneloves__mid-leaderboard:empty,.everyoneloves__bot-mid-leaderboard:empty{
+            margin-bottom:0;
+}
+</style>
+<div id="dfp-tlb" class="everyonelovesstackoverflow everyoneloves__top-leaderboard" style="min-height: auto; height: auto; display: none;"></div>
+
+    <div class="post-layout">
+        <div class="votecell post-layout--left">
+            
+<div class="js-voting-container grid fd-column ai-stretch gs4 fc-black-200" data-post-id="7389382">
+        <button class="js-vote-up-btn grid--cell s-btn s-btn__unset c-pointer" title="This question shows research effort; it is useful and clear" aria-pressed="false" aria-label="up vote" data-selected-classes="fc-theme-primary"><svg aria-hidden="true" class="svg-icon m0 iconArrowUpLg" width="36" height="36" viewBox="0 0 36 36"><path d="M2 26h32L18 10 2 26z"></path></svg></button>
+        <div class="js-vote-count grid--cell fc-black-500 fs-title grid fd-column ai-center" itemprop="upvoteCount" data-value="64">64</div>
+        <button class="js-vote-down-btn grid--cell s-btn s-btn__unset c-pointer" title="This question does not show any research effort; it is unclear or not useful" aria-pressed="false" aria-label="down vote" data-selected-classes="fc-theme-primary"><svg aria-hidden="true" class="svg-icon m0 iconArrowDownLg" width="36" height="36" viewBox="0 0 36 36"><path d="M2 10h32L18 26 2 10z"></path></svg></button>
+
+        <button class="js-favorite-btn s-btn s-btn__unset c-pointer py4 js-gps-track" aria-pressed="false" aria-label="favorite (39)" data-selected-classes="fc-yellow-600" data-gps-track="post.click({ item: 1, priv: 0, post_type: 1 })">
+            <svg aria-hidden="true" class="svg-icon iconStar" width="18" height="18" viewBox="0 0 18 18"><path d="M9 12.65l-5.29 3.63 1.82-6.15L.44 6.22l6.42-.17L9 0l2.14 6.05 6.42.17-5.1 3.9 1.83 6.16L9 12.65z"></path></svg>
+            <div class="js-favorite-count mt4" data-value="39">39</div>
+        </button>
+    
+
+    
+        <a class="js-post-issue grid--cell s-btn s-btn__unset c-pointer py8 mx-auto" href="https://stackoverflow.com/posts/7389382/timeline" data-shortcut="T" title="Timeline"><svg aria-hidden="true" class="svg-icon mln2 mr0 iconHistory" width="19" height="18" viewBox="0 0 19 18"><path d="M3 9a8 8 0 1 1 3.73 6.77L8.2 14.3A6 6 0 1 0 5 9l3.01-.01-4 4-4-4h3L3 9zm7-4h1.01L11 9.36l3.22 2.1-.6.93L10 10V5z"></path></svg></a>
+
+</div>
+
+        </div>
+
+        
+
+<div class="postcell post-layout--right">
+    
+    <div class="post-text" itemprop="text">
+                    
+<p>I believe most of people know what 2PC (two-phase commit protocol) is
+ and how to use it in Java or most of modern languages. Basically, it is
+ used to make sure the transactions are in sync when you have 2 or more 
+DBs.</p>
+
+<p>Assume I've two DBs (A and B) using 2PC in two different locations. 
+Before A and B are ready to commit a transaction, both DBs will report 
+back to the transaction manager saying they are ready to commit. So, 
+when the transaction manager is acknowledged, it will send a signal back
+ to A and B telling them to go ahead.</p>
+
+<p>Here is my question: let's say A received the signal and commited the
+ transaction. Once everything is completed, B is about to do the same 
+but someone unplugs the power cable, causing the whole server shutdown. 
+When B is back online, what will B do? And how does B do it?</p>
+
+<p>Remember, A is committed but B is not, and we are using 2PC (so, the design of 2PC stops working, does not it?)</p>
+    </div>
+
+        <div class="post-taglist grid gs4 gsy fd-column">
+            <div class="grid ps-relative d-block">
+                <a href="https://stackoverflow.com/questions/tagged/database" class="post-tag js-gps-track" title="show questions tagged 'database'" rel="tag">database</a> <a href="https://stackoverflow.com/questions/tagged/distributed-transactions" class="post-tag js-gps-track" title="" rel="tag">distributed-transactions</a> 
+            </div>
+        </div>
+
+    <div class="mb0 ">
+        <div class="mt16 grid gs8 gsy fw-wrap jc-end ai-start pt4">
+            <div class="grid--cell mr16" style="flex: 1 1 100px;">
+                
+
+<div class="post-menu"><a href="https://stackoverflow.com/q/7389382" rel="nofollow" itemprop="url" class="js-share-link js-gps-track" title="short permalink to this question" data-gps-track="post.click({ item: 2, priv: 0, post_type: 1 })" data-controller="se-share-sheet s-popover" data-se-share-sheet-title="Share a link to this question" data-se-share-sheet-subtitle="" data-se-share-sheet-post-type="question" data-se-share-sheet-social="facebook twitter devto" data-se-share-sheet-location="1" data-s-popover-placement="bottom-start" aria-controls="se-share-sheet-0" data-action=" s-popover#toggle se-share-sheet#preventNavigation s-popover:show-&gt;se-share-sheet#willShow s-popover:shown-&gt;se-share-sheet#didShow">share</a><div class="s-popover z-dropdown" style="width: unset; max-width: 28em;" id="se-share-sheet-0"><div class="s-popover--arrow"></div><div><span class="js-title fw-bold">Share a link to this question</span> <span class="js-subtitle"></span></div><div class="my8"><input type="text" class="js-input s-input wmn3 sm:wmn-initial" readonly="readonly" value="https://stackoverflow.com/q/7389382"></div><div class="d-flex jc-space-between mbn4"><button class="js-copy-link-btn s-btn s-btn__link">Copy link</button><div class="js-social-container"></div></div></div><span class="lsep">|</span><a href="https://stackoverflow.com/posts/7389382/edit" class="suggest-edit-post js-gps-track" data-gps-track="post.click({ item: 6, priv: 0, post_type: 1 })" title="">improve this question</a><span class="lsep">|</span><button id="btnFollowPost-7389382" class="s-btn s-btn__link fc-black-400 h:fc-black-700 px4 pb2 js-follow-post js-follow-question js-gps-track" role="button" data-gps-track="post.click({ item: 14, priv: 0, post_type: 1 })" data-controller="s-tooltip " data-s-tooltip-placement="bottom" data-s-popover-placement="bottom" aria-controls="" aria-describedby="--stacks-s-tooltip-tw2ivyv1">
+        follow
+    </button><div id="--stacks-s-tooltip-tw2ivyv1" class="s-popover s-popover__tooltip pe-none" aria-hidden="true" role="tooltip">Follow this question to receive notifications<div class="s-popover--arrow"></div></div><span class="lsep">|</span><span class="lsep">|</span><span class="lsep">|</span><span class="lsep">|</span></div>
+
+            </div>
+
+                <div class="post-signature grid--cell">
+<div class="user-info user-hover">
+    <div class="user-action-time">
+        <a href="https://stackoverflow.com/posts/7389382/revisions" title="show all edits to this post" class="js-gps-track" data-gps-track="post.click({ item: 4, priv: 0, post_type: 1 })">edited <span title="2015-03-31 13:57:35Z" class="relativetime">Mar 31 '15 at 13:57</span></a>
+    </div>
+    <div class="user-gravatar32">
+        <a href="https://stackoverflow.com/users/2239096/mikel-urkia"><div class="gravatar-wrapper-32"><img src="Filer_for_database%20-%20Two%20phase%20commit%20-%20Stack%20Overflow/BZQhS.png" alt="" class="bar-sm" width="32" height="32"></div></a>
+    </div>
+    <div class="user-details">
+        <a href="https://stackoverflow.com/users/2239096/mikel-urkia">Mikel Urkia</a>
+        <div class="-flair">
+            <span class="reputation-score" title="reputation score " dir="ltr">1,869</span><span title="1 gold badge" aria-hidden="true"><span class="badge1"></span><span class="badgecount">1</span></span><span class="v-visible-sr">1 gold badge</span><span title="19 silver badges" aria-hidden="true"><span class="badge2"></span><span class="badgecount">19</span></span><span class="v-visible-sr">19 silver badges</span><span title="35 bronze badges" aria-hidden="true"><span class="badge3"></span><span class="badgecount">35</span></span><span class="v-visible-sr">35 bronze badges</span>
+        </div>
+    </div>
+</div>                </div>
+            <div class="post-signature owner grid--cell">
+                <div class="user-info user-hover">
+    <div class="user-action-time">
+        asked <span title="2011-09-12 14:21:47Z" class="relativetime">Sep 12 '11 at 14:21</span>
+    </div>
+    <div class="user-gravatar32">
+        <a href="https://stackoverflow.com/users/428024/dongshengcn"><div class="gravatar-wrapper-32"><img src="Filer_for_database%20-%20Two%20phase%20commit%20-%20Stack%20Overflow/5e8423d8e073c91b19db57e682ae995e.png" alt="" class="bar-sm" width="32" height="32"></div></a>
+    </div>
+    <div class="user-details" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+        <a href="https://stackoverflow.com/users/428024/dongshengcn">dongshengcn</a><span class="d-none" itemprop="name">dongshengcn</span>
+        <div class="-flair">
+            <span class="reputation-score" title="reputation score " dir="ltr">6,064</span><span title="7 gold badges" aria-hidden="true"><span class="badge1"></span><span class="badgecount">7</span></span><span class="v-visible-sr">7 gold badges</span><span title="31 silver badges" aria-hidden="true"><span class="badge2"></span><span class="badgecount">31</span></span><span class="v-visible-sr">31 silver badges</span><span title="44 bronze badges" aria-hidden="true"><span class="badge3"></span><span class="badgecount">44</span></span><span class="v-visible-sr">44 bronze badges</span>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+
+                <div class="post-layout--right">
+        <div id="comments-7389382" class="comments js-comments-container bt bc-black-2 mt12  dno" data-post-id="7389382" data-min-length="15">
+            <ul class="comments-list js-comments-list" data-remaining-comments-count="0" data-canpost="false" data-cansee="true" data-comments-unavailable="false" data-addlink-disabled="true">
+
+            </ul>
+	    </div>
+
+        <div id="comments-link-7389382" data-rep="50" data-anon="true">
+                    <a class="js-add-link comments-link disabled-link" title="Use comments to ask for more information or suggest improvements. Avoid answering questions in comments." href="#" role="button">add a comment</a>
+                <span class="js-link-separator dno">&nbsp;|&nbsp;</span>
+            <a class="js-show-link comments-link dno" title="expand to show all comments on this post" href="#" onclick="" role="button"></a>
+        </div>         
+    </div>
+    </div>
+</div>
+
+
+<div id="dfp-isb" class="everyonelovesstackoverflow everyoneloves__inline-sidebar" style="min-height: auto; height: auto; display: none;"></div>
+
+                <div id="answers">
+
+                    <a name="tab-top"></a>
+                    <div id="answers-header">
+                        <div class="answers-subheader grid ai-center mb8">
+                            <div class="grid--cell fl1">
+                                <h2 class="mb0" data-answercount="3">
+                                        3 Answers
+                                    <span style="display:none;" itemprop="answerCount">3</span>
+                                </h2>
+                            </div>
+                            <div class="grid--cell">
+                                <div class=" grid s-btn-group js-filter-btn">
+        <a class="grid--cell s-btn s-btn__muted s-btn__outlined" href="https://stackoverflow.com/questions/7389382/two-phase-commit?answertab=active#tab-top" data-nav-xhref="" title="Answers with the latest activity first" data-value="active" data-shortcut="A">
+            Active</a>
+        <a class="grid--cell s-btn s-btn__muted s-btn__outlined" href="https://stackoverflow.com/questions/7389382/two-phase-commit?answertab=oldest#tab-top" data-nav-xhref="" title="Answers in the order they were provided" data-value="oldest" data-shortcut="O">
+            Oldest</a>
+        <a class="youarehere is-selected grid--cell s-btn s-btn__muted s-btn__outlined" href="https://stackoverflow.com/questions/7389382/two-phase-commit?answertab=votes#tab-top" data-nav-xhref="" title="Answers with the highest score first" data-value="votes" data-shortcut="V">
+            Votes</a>
+</div>
+
+                            </div>
+                        </div>
+                            
+                    </div>
+
+
+                                          
+<a name="7389599"></a>
+<div id="answer-7389599" class="answer accepted-answer" data-answerid="7389599" itemprop="acceptedAnswer" itemscope="" itemtype="http://schema.org/Answer">
+    <div class="post-layout">
+        <div class="votecell post-layout--left">
+            
+<div class="js-voting-container grid fd-column ai-stretch gs4 fc-black-200" data-post-id="7389599">
+        <button class="js-vote-up-btn grid--cell s-btn s-btn__unset c-pointer" title="This answer is useful" aria-pressed="false" aria-label="up vote" data-selected-classes="fc-theme-primary"><svg aria-hidden="true" class="svg-icon m0 iconArrowUpLg" width="36" height="36" viewBox="0 0 36 36"><path d="M2 26h32L18 10 2 26z"></path></svg></button>
+        <div class="js-vote-count grid--cell fc-black-500 fs-title grid fd-column ai-center" itemprop="upvoteCount" data-value="70">70</div>
+        <button class="js-vote-down-btn grid--cell s-btn s-btn__unset c-pointer" title="This answer is not useful" aria-pressed="false" aria-label="down vote" data-selected-classes="fc-theme-primary"><svg aria-hidden="true" class="svg-icon m0 iconArrowDownLg" width="36" height="36" viewBox="0 0 36 36"><path d="M2 10h32L18 26 2 10z"></path></svg></button>
+
+    
+            <div class="js-accepted-answer-indicator grid--cell fc-green-500 ta-center py4" title="loading when this answer was accepted..." tabindex="0" role="note" aria-label="accepted">
+                <svg aria-hidden="true" class="svg-icon iconCheckmarkLg" width="36" height="36" viewBox="0 0 36 36"><path d="M6 14l8 8L30 6v8L14 30l-8-8v-8z"></path></svg>
+            </div>
+
+    
+        <a class="js-post-issue grid--cell s-btn s-btn__unset c-pointer py8 mx-auto" href="https://stackoverflow.com/posts/7389599/timeline" data-shortcut="T" title="Timeline"><svg aria-hidden="true" class="svg-icon mln2 mr0 iconHistory" width="19" height="18" viewBox="0 0 19 18"><path d="M3 9a8 8 0 1 1 3.73 6.77L8.2 14.3A6 6 0 1 0 5 9l3.01-.01-4 4-4-4h3L3 9zm7-4h1.01L11 9.36l3.22 2.1-.6.93L10 10V5z"></path></svg></a>
+
+</div>
+
+        </div>
+
+        
+
+<div class="answercell post-layout--right">
+    
+    <div class="post-text" itemprop="text">
+<p><strong>On Two-Phase Commit</strong></p>
+
+<p>Two phase commit does not guarantee that a distributed transaction 
+can't fail, but it does guarantee that it can't fail silently without 
+the TM being aware of it.</p>
+
+<p>In order for B to report the transaction as being ready to commit, B 
+must have the transaction in persistent storage (i.e. B must be able to 
+guarantee that the transaction can commit in all circumstances).  In 
+this situation, B has persisted the transaction but the transaction 
+manager has not yet received a message from B confirming that B has 
+completed the commit.</p>
+
+<p>The transaction manager will poll B again when B comes back online 
+and ask it to commit the transaction.  If B has already committed the 
+transaction it will report the transaction as committed.  If B has not 
+yet committed the transaction it will then commit as it has already 
+persisted it and is thus still in a position to commit the transaction.</p>
+
+<p>In order for B to fail in this situation, it would have to undergo a 
+catastrophic failure that lost data or log entries.  The transaction 
+manager would still be aware that B had not reported a successful 
+commit.<sup>1</sup>  </p>
+
+<p>In practice, if B can no longer commit the transaction, it would 
+imply that the disaster that took B out had caused data loss, and B 
+would report an error when the TM asked it to commit a TxID that it 
+wasn't aware of or didn't think was in a commitable state.</p>
+
+<p>Thus, two phase commit does not prevent a catastrophic failure from 
+occuring, but it does prevent the failure from going unnoticed.  In this
+ scenario the transaction manager will report an error back to the 
+application if B cannot commit.  </p>
+
+<p>The application still has to be able to recover from the error, but 
+the transaction cannot fail silently without the application being made 
+aware of the inconsistent state.</p>
+
+<p><strong>Semantics</strong></p>
+
+<ul>
+<li><p>If a resource manager or network goes down in phase 1, the
+transaction manager will detect a fatal error (can't connect to
+resource manager) and mark the sub-transaction as failed.  When the
+network comes back up it will abort the transaction on all of the
+participating resource managers.</p></li>
+<li><p>If a resource manager or network goes down in phase 2, the
+transaction manager will continue to poll the resource manager until
+it comes back up.  When it re-connects back to the resource manager
+it will tell the RM to commit the transaction.  If the RM returns an
+error along the lines of 'Unknown TxID' the TM will be aware that
+there is a data loss issue in the RM.</p></li>
+<li><p>If the TM goes down in phase 1 then the client will block until the
+TM comes back up, unless it times out or receives an error due to the
+broken network connection.  In this case the client is made aware of
+the error and can either re-try or initiate the abort itself.</p></li>
+<li><p>If the TM goes down in phase 2 then it will block the client until
+the TM comes back up.  It has already reported the transaction as
+committable and no fatal error should be presented to the client,
+although it may block until the TM comes back up.  The TM will still
+have the transaction in an uncommitted state and will poll the RMs
+to commit when it comes back up.</p></li>
+</ul>
+
+<p>Post-commit data loss events in the resource managers are not handled
+ by the transaction manager and are a function of the resilience of the 
+RMs.  </p>
+
+<p>Two-phase commit does not guarantee fault tolerance - see <a href="http://research.microsoft.com/pubs/64636/tr-2003-96.pdf" rel="noreferrer">Paxos</a>
+ for an example of a protocol that does address fault tolerance - but it
+ does guarantee that partial failure of a distributed transaction cannot
+ go un-noticed.</p>
+
+<ol>
+<li>Note that this sort of failure could also lose data from previously 
+committed transactions.  Two phase commit does not guarantee that the 
+resource managers can't lose or corrupt data or that DR procedures don't
+ screw up.</li>
+</ol>
+    </div>
+    <div class="grid mb0 fw-wrap ai-start jc-end gs8 gsy">
+        <time itemprop="dateCreated" datetime="2011-09-12T14:39:09"></time>
+        <div class="grid--cell mr16" style="flex: 1 1 100px;">
+            
+
+<div class="post-menu"><a href="https://stackoverflow.com/a/7389599" rel="nofollow" itemprop="url" class="js-share-link js-gps-track" title="short permalink to this answer" data-gps-track="post.click({ item: 2, priv: 0, post_type: 2 })" data-controller="se-share-sheet s-popover" data-se-share-sheet-title="Share a link to this answer" data-se-share-sheet-subtitle="" data-se-share-sheet-post-type="answer" data-se-share-sheet-social="facebook twitter devto" data-se-share-sheet-location="2" data-s-popover-placement="bottom-start" aria-controls="se-share-sheet-1" data-action=" s-popover#toggle se-share-sheet#preventNavigation s-popover:show-&gt;se-share-sheet#willShow s-popover:shown-&gt;se-share-sheet#didShow">share</a><div class="s-popover z-dropdown" style="width: unset; max-width: 28em;" id="se-share-sheet-1"><div class="s-popover--arrow"></div><div><span class="js-title fw-bold">Share a link to this answer</span> <span class="js-subtitle"></span></div><div class="my8"><input type="text" class="js-input s-input wmn3 sm:wmn-initial" readonly="readonly" value="https://stackoverflow.com/a/7389599"></div><div class="d-flex jc-space-between mbn4"><button class="js-copy-link-btn s-btn s-btn__link">Copy link</button><div class="js-social-container"></div></div></div><span class="lsep">|</span><a href="https://stackoverflow.com/posts/7389599/edit" class="suggest-edit-post js-gps-track" data-gps-track="post.click({ item: 6, priv: 0, post_type: 2 })" title="">improve this answer</a><span class="lsep">|</span><button id="btnFollowPost-7389599" class="s-btn s-btn__link fc-black-400 h:fc-black-700 px4 pb2 js-follow-post js-follow-answer js-gps-track" role="button" data-gps-track="post.click({ item: 14, priv: 0, post_type: 2 })" data-controller="s-tooltip " data-s-tooltip-placement="bottom" data-s-popover-placement="bottom" aria-controls="" aria-describedby="--stacks-s-tooltip-4oe41buw">
+        follow
+    </button><div id="--stacks-s-tooltip-4oe41buw" class="s-popover s-popover__tooltip pe-none" aria-hidden="true" role="tooltip">Follow this answer to receive notifications<div class="s-popover--arrow"></div></div><span class="lsep">|</span><span class="lsep">|</span><span class="lsep">|</span><span class="lsep">|</span></div>
+
+        </div>
+    <div class="post-signature grid--cell fl0">
+<div class="user-info ">
+    <div class="user-action-time">
+        <a href="https://stackoverflow.com/posts/7389599/revisions" title="show all edits to this post" class="js-gps-track" data-gps-track="post.click({ item: 4, priv: 0, post_type: 2 })">edited <span title="2016-04-03 12:49:18Z" class="relativetime">Apr 3 '16 at 12:49</span></a>
+    </div>
+    <div class="user-gravatar32">
+        
+    </div>
+    <div class="user-details">
+        
+        <div class="-flair">
+            
+        </div>
+    </div>
+</div>    </div>
+
+
+    <div class="post-signature grid--cell fl0">
+        <div class="user-info user-hover">
+    <div class="user-action-time">
+        answered <span title="2011-09-12 14:39:09Z" class="relativetime">Sep 12 '11 at 14:39</span>
+    </div>
+    <div class="user-gravatar32">
+        <a href="https://stackoverflow.com/users/15401/concernedoftunbridgewells"><div class="gravatar-wrapper-32"><img src="Filer_for_database%20-%20Two%20phase%20commit%20-%20Stack%20Overflow/rpdwr.png" alt="" class="bar-sm" width="32" height="32"></div></a>
+    </div>
+    <div class="user-details" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+        <a href="https://stackoverflow.com/users/15401/concernedoftunbridgewells">ConcernedOfTunbridgeWells</a><span class="d-none" itemprop="name">ConcernedOfTunbridgeWells</span>
+        <div class="-flair">
+            <span class="reputation-score" title="reputation score 56,430" dir="ltr">56.4k</span><span title="14 gold badges" aria-hidden="true"><span class="badge1"></span><span class="badgecount">14</span></span><span class="v-visible-sr">14 gold badges</span><span title="131 silver badges" aria-hidden="true"><span class="badge2"></span><span class="badgecount">131</span></span><span class="v-visible-sr">131 silver badges</span><span title="191 bronze badges" aria-hidden="true"><span class="badge3"></span><span class="badgecount">191</span></span><span class="v-visible-sr">191 bronze badges</span>
+        </div>
+    </div>
+</div>
+
+    </div>
+    </div>
+    
+</div>
+
+
+                <div class="post-layout--right">
+        <div id="comments-7389599" class="comments js-comments-container bt bc-black-2 mt12 " data-post-id="7389599" data-min-length="15">
+            <ul class="comments-list js-comments-list" data-remaining-comments-count="1" data-canpost="false" data-cansee="true" data-comments-unavailable="false" data-addlink-disabled="true">
+
+                        <li id="comment-60374470" class="comment js-comment " data-comment-id="60374470">
+        <div class="js-comment-actions comment-actions">
+            <div class="comment-score js-comment-edit-hide">
+            </div>
+        </div>
+        <div class="comment-text js-comment-text-and-form">
+            <div class="comment-body js-comment-edit-hide">
+                
+                <span class="comment-copy">This answer makes a dangerous assumption that <a href="https://queue.acm.org/detail.cfm?id=2655736" rel="nofollow noreferrer">The Network is Reliable</a>.</span>
+                
+–&nbsp;<a href="https://stackoverflow.com/users/596041/filip-haglund" title="11,219 reputation" class="comment-user">Filip Haglund</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="#comment60374470_7389599"><span title="2016-04-02 20:48:35Z" class="relativetime-clean">Apr 2 '16 at 20:48</span></a></span>
+            </div>
+        </div>
+    </li>
+    <li id="comment-60385287" class="comment js-comment " data-comment-id="60385287">
+        <div class="js-comment-actions comment-actions">
+            <div class="comment-score js-comment-edit-hide">
+            </div>
+        </div>
+        <div class="comment-text js-comment-text-and-form">
+            <div class="comment-body js-comment-edit-hide">
+                
+                <span class="comment-copy">I'm not sure what you're 
+getting at.  In the event of a network outage in the first phase the TM 
+would fail to connect to one of the RMs and abort the transaction due to
+ the fatal error, ultimately telling all the RMs to abort as they came 
+back online.  In the second phase it would just continue to poll the RM 
+until the network came back up, at which point it would issue the 
+confirm-commit.  Again, 2PC doesn't guarantee commit, it just guarantees
+ that the transaction can't fail without the application being made 
+aware of it.</span>
+                
+–&nbsp;<a href="https://stackoverflow.com/users/15401/concernedoftunbridgewells" title="56,430 reputation" class="comment-user">ConcernedOfTunbridgeWells</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="#comment60385287_7389599"><span title="2016-04-03 10:13:05Z" class="relativetime-clean">Apr 3 '16 at 10:13</span></a></span>
+                        <span title="this comment was edited 2 times">
+                            <svg aria-hidden="true" class="svg-icon va-text-bottom o50 iconPencilSm" width="14" height="14" viewBox="0 0 14 14"><path d="M11.1 1.71l1.13 1.12c.2.2.2.51 0 .71L11.1 4.7 9.21 2.86l1.17-1.15c.2-.2.51-.2.71 0zM2 10.12l6.37-6.43 1.88 1.88L3.88 12H2v-1.88z"></path></svg>
+                        </span>
+            </div>
+        </div>
+    </li>
+    <li id="comment-60386895" class="comment js-comment " data-comment-id="60386895">
+        <div class="js-comment-actions comment-actions">
+            <div class="comment-score js-comment-edit-hide">
+            </div>
+        </div>
+        <div class="comment-text js-comment-text-and-form">
+            <div class="comment-body js-comment-edit-hide">
+                
+                <span class="comment-copy">What if the TM crashes after 
+receiving all votes to commit, but before sending the final 
+commit/abort? Then everyone's holding locks, waiting for a vote. And you
+ cannot timeout, some nodes might commit while others timeout and abort.
+ If you have a synchronous reliable network, and no node ever crashes, 
+and you have real-time operating systems so you can guarantee progress 
+within a bounded time, then 2PC works. Usually, we have none of those 
+properties.</span>
+                
+–&nbsp;<a href="https://stackoverflow.com/users/596041/filip-haglund" title="11,219 reputation" class="comment-user">Filip Haglund</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="#comment60386895_7389599"><span title="2016-04-03 11:48:34Z" class="relativetime-clean">Apr 3 '16 at 11:48</span></a></span>
+            </div>
+        </div>
+    </li>
+    <li id="comment-60387521" class="comment js-comment " data-comment-id="60387521">
+        <div class="js-comment-actions comment-actions">
+            <div class="comment-score js-comment-edit-hide">
+                    <span title="number of 'useful comment' votes received" class="cool">2</span>
+            </div>
+        </div>
+        <div class="comment-text js-comment-text-and-form">
+            <div class="comment-body js-comment-edit-hide">
+                
+                <span class="comment-copy">Don't confuse 2PC semantics 
+with fault tolerance.  The TM will still have the transaction marked as 
+uncommitted until it has received confirmation of all commits in the 
+second phase.  When it comes back up it will poll all the resource 
+managers and ask them to commit and they will report the transaction as 
+committed.  Remember, the RMs must be able to guarantee commit.  2PC 
+doesn't do anything about a catastrophic failure of a RM after it's 
+reported a successful commit on the second phase - or at any time after 
+that.</span>
+                
+–&nbsp;<a href="https://stackoverflow.com/users/15401/concernedoftunbridgewells" title="56,430 reputation" class="comment-user">ConcernedOfTunbridgeWells</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="#comment60387521_7389599"><span title="2016-04-03 12:22:10Z" class="relativetime-clean">Apr 3 '16 at 12:22</span></a></span>
+                        <span title="this comment was edited 1 time">
+                            <svg aria-hidden="true" class="svg-icon va-text-bottom o50 iconPencilSm" width="14" height="14" viewBox="0 0 14 14"><path d="M11.1 1.71l1.13 1.12c.2.2.2.51 0 .71L11.1 4.7 9.21 2.86l1.17-1.15c.2-.2.51-.2.71 0zM2 10.12l6.37-6.43 1.88 1.88L3.88 12H2v-1.88z"></path></svg>
+                        </span>
+            </div>
+        </div>
+    </li>
+    <li id="comment-60387771" class="comment js-comment " data-comment-id="60387771">
+        <div class="js-comment-actions comment-actions">
+            <div class="comment-score js-comment-edit-hide">
+            </div>
+        </div>
+        <div class="comment-text js-comment-text-and-form">
+            <div class="comment-body js-comment-edit-hide">
+                
+                <span class="comment-copy">Here's a paper on a 3-phase commit protocol called Paxos, which does address fault tolerance. <a href="http://research.microsoft.com/pubs/64636/tr-2003-96.pdf" rel="nofollow noreferrer">research.microsoft.com/pubs/64636/tr-2003-96.pdf</a></span>
+                
+–&nbsp;<a href="https://stackoverflow.com/users/15401/concernedoftunbridgewells" title="56,430 reputation" class="comment-user">ConcernedOfTunbridgeWells</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="#comment60387771_7389599"><span title="2016-04-03 12:35:00Z" class="relativetime-clean">Apr 3 '16 at 12:35</span></a></span>
+            </div>
+        </div>
+    </li>
+
+            </ul>
+	    </div>
+
+        <div id="comments-link-7389599" data-rep="50" data-anon="true">
+                    <a class="js-add-link comments-link dno" title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”." href="#" role="button"></a>
+                <span class="js-link-separator dno">&nbsp;|&nbsp;</span>
+            <a class="js-show-link comments-link " title="expand to show all comments on this post" href="#" onclick="" role="button">show <b>1</b> more comment</a>
+        </div>         
+    </div>
+    </div>
+</div>
+
+<div id="dfp-mlb" class="everyonelovesstackoverflow everyoneloves__mid-leaderboard" data-dfp-zone="true" style="display: none;"></div>
+                                          
+<a name="29369672"></a>
+<div id="answer-29369672" class="answer" data-answerid="29369672" itemprop="suggestedAnswer" itemscope="" itemtype="http://schema.org/Answer">
+    <div class="post-layout">
+        <div class="votecell post-layout--left">
+            
+<div class="js-voting-container grid fd-column ai-stretch gs4 fc-black-200" data-post-id="29369672">
+        <button class="js-vote-up-btn grid--cell s-btn s-btn__unset c-pointer" title="This answer is useful" aria-pressed="false" aria-label="up vote" data-selected-classes="fc-theme-primary"><svg aria-hidden="true" class="svg-icon m0 iconArrowUpLg" width="36" height="36" viewBox="0 0 36 36"><path d="M2 26h32L18 10 2 26z"></path></svg></button>
+        <div class="js-vote-count grid--cell fc-black-500 fs-title grid fd-column ai-center" itemprop="upvoteCount" data-value="4">4</div>
+        <button class="js-vote-down-btn grid--cell s-btn s-btn__unset c-pointer" title="This answer is not useful" aria-pressed="false" aria-label="down vote" data-selected-classes="fc-theme-primary"><svg aria-hidden="true" class="svg-icon m0 iconArrowDownLg" width="36" height="36" viewBox="0 0 36 36"><path d="M2 10h32L18 26 2 10z"></path></svg></button>
+
+    
+            <div class="js-accepted-answer-indicator grid--cell fc-green-500 ta-center py4 d-none" title="loading when this answer was accepted..." tabindex="0" role="note" aria-label="accepted">
+                <svg aria-hidden="true" class="svg-icon iconCheckmarkLg" width="36" height="36" viewBox="0 0 36 36"><path d="M6 14l8 8L30 6v8L14 30l-8-8v-8z"></path></svg>
+            </div>
+
+    
+        <a class="js-post-issue grid--cell s-btn s-btn__unset c-pointer py8 mx-auto" href="https://stackoverflow.com/posts/29369672/timeline" data-shortcut="T" title="Timeline"><svg aria-hidden="true" class="svg-icon mln2 mr0 iconHistory" width="19" height="18" viewBox="0 0 19 18"><path d="M3 9a8 8 0 1 1 3.73 6.77L8.2 14.3A6 6 0 1 0 5 9l3.01-.01-4 4-4-4h3L3 9zm7-4h1.01L11 9.36l3.22 2.1-.6.93L10 10V5z"></path></svg></a>
+
+</div>
+
+        </div>
+
+        
+
+<div class="answercell post-layout--right">
+    
+    <div class="post-text" itemprop="text">
+<p>I believe three phase commit is a much better approach. Unfortunately I haven't found anyone implementing such a technology.</p>
+
+<p><a href="http://the-paper-trail.org/blog/consensus-protocols-three-phase-commit/" rel="nofollow">http://the-paper-trail.org/blog/consensus-protocols-three-phase-commit/</a></p>
+
+<p>Here are the essential parts of the above article :</p>
+
+<p>The fundamental difficulty with 2PC is that, once the decision to 
+commit has been made by the co-ordinator and communicated to some 
+replicas, the replicas go right ahead and act upon the commit statement 
+without checking to see if every other replica got the message. Then, if
+ a replica that committed crashes along with the co-ordinator, the 
+system has no way of telling what the result of the transaction was 
+(since only the co-ordinator and the replica that got the message know 
+for sure). Since the transaction might already have been committed at 
+the crashed replica, the protocol cannot pessimistically abort – as the 
+transaction might have had side-effects that are impossible to undo. 
+Similarly, the protocol cannot optimistically force the transaction to 
+commit, as the original vote might have been to abort.</p>
+
+<p>This problem is – mostly – circumvented by the addition of an extra 
+phase to 2PC, unsurprisingly giving us a three-phase commit protocol. 
+The idea is very simple. We break the second phase of 2PC – ‘commit’ – 
+into two sub-phases. The first is the ‘prepare to commit’ phase. The 
+co-ordinator sends this message to all replicas when it has received 
+unanimous ‘yes’ votes in the first phase. On receipt of this messages, 
+replicas get into a state where they are able to commit the transaction –
+ by taking necessary locks and so forth – but crucially do not do any 
+work that they cannot later undo. They then reply to the co-ordinator 
+telling it that the ‘prepare to commit’ message was received.</p>
+
+<p>The purpose of this phase is to communicate the result of the vote to
+ every replica so that the state of the protocol can be recovered no 
+matter which replica dies.</p>
+
+<p>The last phase of the protocol does almost exactly the same thing as 
+the original ‘commit or abort’ phase in 2PC. If the co-ordinator 
+receives confirmation of the delivery of the ‘prepare to commit’ message
+ from all replicas, it is then safe to go ahead with committing the 
+transaction. However, if delivery is not confirmed, the co-ordinator 
+cannot guarantee that the protocol state will be recovered should it 
+crash (if you are tolerating a fixed number f of failures, the 
+co-ordinator can go ahead once it has received f+1 confirmations). In 
+this case, the co-ordinator will abort the transaction.</p>
+
+<p>If the co-ordinator should crash at any point, a recovery node can 
+take over the transaction and query the state from any remaining 
+replicas. If a replica that has committed the transaction has crashed, 
+we know that every other replica has received a ‘prepare to commit’ 
+message (otherwise the co-ordinator wouldn’t have moved to the commit 
+phase), and therefore the recovery node will be able to determine that 
+the transaction was able to be committed, and safely shepherd the 
+protocol to its conclusion. If any replica reports to the recovery node 
+that it has not received ‘prepare to commit’, the recovery node will 
+know that the transaction has not been committed at any replica, and 
+will therefore be able either to pessimistically abort or re-run the 
+protocol from the beginning.</p>
+
+<p>So does 3PC fix all our problems? Not quite, but it comes close. In 
+the case of a network partition, the wheels rather come off – imagine 
+that all the replicas that received ‘prepare to commit’ are on one side 
+of the partition, and those that did not are on the other. Then both 
+partitions will continue with recovery nodes that respectively commit or
+ abort the transaction, and when the network merges the system will have
+ an inconsistent state. So 3PC has potentially unsafe runs, as does 2PC,
+ but will always make progress and therefore satisfies its liveness 
+properties. The fact that 3PC will not block on single node failures 
+makes it much more appealing for services where high availability is 
+more important than low latencies.</p>
+    </div>
+    <div class="grid mb0 fw-wrap ai-start jc-end gs8 gsy">
+        <time itemprop="dateCreated" datetime="2015-03-31T13:18:24"></time>
+        <div class="grid--cell mr16" style="flex: 1 1 100px;">
+            
+
+<div class="post-menu"><a href="https://stackoverflow.com/a/29369672" rel="nofollow" itemprop="url" class="js-share-link js-gps-track" title="short permalink to this answer" data-gps-track="post.click({ item: 2, priv: 0, post_type: 2 })" data-controller="se-share-sheet s-popover" data-se-share-sheet-title="Share a link to this answer" data-se-share-sheet-subtitle="" data-se-share-sheet-post-type="answer" data-se-share-sheet-social="facebook twitter devto" data-se-share-sheet-location="2" data-s-popover-placement="bottom-start" aria-controls="se-share-sheet-2" data-action=" s-popover#toggle se-share-sheet#preventNavigation s-popover:show-&gt;se-share-sheet#willShow s-popover:shown-&gt;se-share-sheet#didShow">share</a><div class="s-popover z-dropdown" style="width: unset; max-width: 28em;" id="se-share-sheet-2"><div class="s-popover--arrow"></div><div><span class="js-title fw-bold">Share a link to this answer</span> <span class="js-subtitle"></span></div><div class="my8"><input type="text" class="js-input s-input wmn3 sm:wmn-initial" readonly="readonly" value="https://stackoverflow.com/a/29369672"></div><div class="d-flex jc-space-between mbn4"><button class="js-copy-link-btn s-btn s-btn__link">Copy link</button><div class="js-social-container"></div></div></div><span class="lsep">|</span><a href="https://stackoverflow.com/posts/29369672/edit" class="suggest-edit-post js-gps-track" data-gps-track="post.click({ item: 6, priv: 0, post_type: 2 })" title="">improve this answer</a><span class="lsep">|</span><button id="btnFollowPost-29369672" class="s-btn s-btn__link fc-black-400 h:fc-black-700 px4 pb2 js-follow-post js-follow-answer js-gps-track" role="button" data-gps-track="post.click({ item: 14, priv: 0, post_type: 2 })" data-controller="s-tooltip " data-s-tooltip-placement="bottom" data-s-popover-placement="bottom" aria-controls="" aria-describedby="--stacks-s-tooltip-qbnres9o">
+        follow
+    </button><div id="--stacks-s-tooltip-qbnres9o" class="s-popover s-popover__tooltip pe-none" aria-hidden="true" role="tooltip">Follow this answer to receive notifications<div class="s-popover--arrow"></div></div><span class="lsep">|</span><span class="lsep">|</span><span class="lsep">|</span><span class="lsep">|</span></div>
+
+        </div>
+    <div class="post-signature grid--cell fl0">
+<div class="user-info ">
+    <div class="user-action-time">
+        <a href="https://stackoverflow.com/posts/29369672/revisions" title="show all edits to this post" class="js-gps-track" data-gps-track="post.click({ item: 4, priv: 0, post_type: 2 })">edited <span title="2015-04-01 07:41:13Z" class="relativetime">Apr 1 '15 at 7:41</span></a>
+    </div>
+    <div class="user-gravatar32">
+        
+    </div>
+    <div class="user-details">
+        
+        <div class="-flair">
+            
+        </div>
+    </div>
+</div>    </div>
+
+
+    <div class="post-signature grid--cell fl0">
+        <div class="user-info user-hover">
+    <div class="user-action-time">
+        answered <span title="2015-03-31 13:18:24Z" class="relativetime">Mar 31 '15 at 13:18</span>
+    </div>
+    <div class="user-gravatar32">
+        <a href="https://stackoverflow.com/users/4734025/makis-gerakas"><div class="gravatar-wrapper-32"><img src="Filer_for_database%20-%20Two%20phase%20commit%20-%20Stack%20Overflow/picture.jfif" alt="" class="bar-sm" width="32" height="32"></div></a>
+    </div>
+    <div class="user-details" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+        <a href="https://stackoverflow.com/users/4734025/makis-gerakas">Makis Gerakas</a><span class="d-none" itemprop="name">Makis Gerakas</span>
+        <div class="-flair">
+            <span class="reputation-score" title="reputation score " dir="ltr">41</span><span title="4 bronze badges" aria-hidden="true"><span class="badge3"></span><span class="badgecount">4</span></span><span class="v-visible-sr">4 bronze badges</span>
+        </div>
+    </div>
+</div>
+
+    </div>
+    </div>
+    
+</div>
+
+
+                <div class="post-layout--right">
+        <div id="comments-29369672" class="comments js-comments-container bt bc-black-2 mt12 " data-post-id="29369672" data-min-length="15">
+            <ul class="comments-list js-comments-list" data-remaining-comments-count="0" data-canpost="false" data-cansee="true" data-comments-unavailable="false" data-addlink-disabled="true">
+
+                        <li id="comment-46921561" class="comment js-comment " data-comment-id="46921561">
+        <div class="js-comment-actions comment-actions">
+            <div class="comment-score js-comment-edit-hide">
+            </div>
+        </div>
+        <div class="comment-text js-comment-text-and-form">
+            <div class="comment-body js-comment-edit-hide">
+                
+                <span class="comment-copy">Its best to put the essential parts of a linked article in the answer, that way, if the link gets changed, the info isn't lost.</span>
+                
+–&nbsp;<a href="https://stackoverflow.com/users/664479/stuart-siegler" title="1,598 reputation" class="comment-user">Stuart Siegler</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="#comment46921561_29369672"><span title="2015-03-31 13:53:25Z" class="relativetime-clean">Mar 31 '15 at 13:53</span></a></span>
+            </div>
+        </div>
+    </li>
+    <li id="comment-60374577" class="comment js-comment " data-comment-id="60374577">
+        <div class="js-comment-actions comment-actions">
+            <div class="comment-score js-comment-edit-hide">
+            </div>
+        </div>
+        <div class="comment-text js-comment-text-and-form">
+            <div class="comment-body js-comment-edit-hide">
+                
+                <span class="comment-copy">You should really use Raft or Paxos instead of 3PC in your systems, for actual correctness.</span>
+                
+–&nbsp;<a href="https://stackoverflow.com/users/596041/filip-haglund" title="11,219 reputation" class="comment-user">Filip Haglund</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="#comment60374577_29369672"><span title="2016-04-02 20:54:04Z" class="relativetime-clean">Apr 2 '16 at 20:54</span></a></span>
+            </div>
+        </div>
+    </li>
+
+            </ul>
+	    </div>
+
+        <div id="comments-link-29369672" data-rep="50" data-anon="true">
+                    <a class="js-add-link comments-link disabled-link" title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”." href="#" role="button">add a comment</a>
+                <span class="js-link-separator dno">&nbsp;|&nbsp;</span>
+            <a class="js-show-link comments-link dno" title="expand to show all comments on this post" href="#" onclick="" role="button"></a>
+        </div>         
+    </div>
+    </div>
+</div>
+
+                                          
+<a name="29370018"></a>
+<div id="answer-29370018" class="answer" data-answerid="29370018" itemprop="suggestedAnswer" itemscope="" itemtype="http://schema.org/Answer">
+    <div class="post-layout">
+        <div class="votecell post-layout--left">
+            
+<div class="js-voting-container grid fd-column ai-stretch gs4 fc-black-200" data-post-id="29370018">
+        <button class="js-vote-up-btn grid--cell s-btn s-btn__unset c-pointer" title="This answer is useful" aria-pressed="false" aria-label="up vote" data-selected-classes="fc-theme-primary"><svg aria-hidden="true" class="svg-icon m0 iconArrowUpLg" width="36" height="36" viewBox="0 0 36 36"><path d="M2 26h32L18 10 2 26z"></path></svg></button>
+        <div class="js-vote-count grid--cell fc-black-500 fs-title grid fd-column ai-center" itemprop="upvoteCount" data-value="3">3</div>
+        <button class="js-vote-down-btn grid--cell s-btn s-btn__unset c-pointer" title="This answer is not useful" aria-pressed="false" aria-label="down vote" data-selected-classes="fc-theme-primary"><svg aria-hidden="true" class="svg-icon m0 iconArrowDownLg" width="36" height="36" viewBox="0 0 36 36"><path d="M2 10h32L18 26 2 10z"></path></svg></button>
+
+    
+            <div class="js-accepted-answer-indicator grid--cell fc-green-500 ta-center py4 d-none" title="loading when this answer was accepted..." tabindex="0" role="note" aria-label="accepted">
+                <svg aria-hidden="true" class="svg-icon iconCheckmarkLg" width="36" height="36" viewBox="0 0 36 36"><path d="M6 14l8 8L30 6v8L14 30l-8-8v-8z"></path></svg>
+            </div>
+
+    
+        <a class="js-post-issue grid--cell s-btn s-btn__unset c-pointer py8 mx-auto" href="https://stackoverflow.com/posts/29370018/timeline" data-shortcut="T" title="Timeline"><svg aria-hidden="true" class="svg-icon mln2 mr0 iconHistory" width="19" height="18" viewBox="0 0 19 18"><path d="M3 9a8 8 0 1 1 3.73 6.77L8.2 14.3A6 6 0 1 0 5 9l3.01-.01-4 4-4-4h3L3 9zm7-4h1.01L11 9.36l3.22 2.1-.6.93L10 10V5z"></path></svg></a>
+
+</div>
+
+        </div>
+
+        
+
+<div class="answercell post-layout--right">
+    
+    <div class="post-text" itemprop="text">
+<p>Your scenario is not the only one where things can ultimately go 
+wrong despite all effort.  Suppose A and B have both reported "ready to 
+commit" to TM, and then someone unplugs the line between TM and, say, B.
+  B is waiting for the go-ahead (or no-go) from TM, but it certainly 
+won't keep waiting forever until TM reconnects (its own resources 
+involved in the transaction must stay locked/inaccessible throughout the
+ entire wait time for obvious reasons).  So when B is kept waiting too 
+long for its own taste, it will take what is called "heuristic 
+decisions".  That is, it will decide to commit or rollback independently
+ from TM, based on, well, I don't really know what, but that doesn't 
+really matter.  It should be obvious that any such heuristic decisions 
+can deviate from the actual commit decision taken by TM.</p>
+    </div>
+    <div class="grid mb0 fw-wrap ai-start jc-end gs8 gsy">
+        <time itemprop="dateCreated" datetime="2015-03-31T13:36:21"></time>
+        <div class="grid--cell mr16" style="flex: 1 1 100px;">
+            
+
+<div class="post-menu"><a href="https://stackoverflow.com/a/29370018" rel="nofollow" itemprop="url" class="js-share-link js-gps-track" title="short permalink to this answer" data-gps-track="post.click({ item: 2, priv: 0, post_type: 2 })" data-controller="se-share-sheet s-popover" data-se-share-sheet-title="Share a link to this answer" data-se-share-sheet-subtitle="" data-se-share-sheet-post-type="answer" data-se-share-sheet-social="facebook twitter devto" data-se-share-sheet-location="2" data-s-popover-placement="bottom-start" aria-controls="se-share-sheet-3" data-action=" s-popover#toggle se-share-sheet#preventNavigation s-popover:show-&gt;se-share-sheet#willShow s-popover:shown-&gt;se-share-sheet#didShow">share</a><div class="s-popover z-dropdown" style="width: unset; max-width: 28em;" id="se-share-sheet-3"><div class="s-popover--arrow"></div><div><span class="js-title fw-bold">Share a link to this answer</span> <span class="js-subtitle"></span></div><div class="my8"><input type="text" class="js-input s-input wmn3 sm:wmn-initial" readonly="readonly" value="https://stackoverflow.com/a/29370018"></div><div class="d-flex jc-space-between mbn4"><button class="js-copy-link-btn s-btn s-btn__link">Copy link</button><div class="js-social-container"></div></div></div><span class="lsep">|</span><a href="https://stackoverflow.com/posts/29370018/edit" class="suggest-edit-post js-gps-track" data-gps-track="post.click({ item: 6, priv: 0, post_type: 2 })" title="">improve this answer</a><span class="lsep">|</span><button id="btnFollowPost-29370018" class="s-btn s-btn__link fc-black-400 h:fc-black-700 px4 pb2 js-follow-post js-follow-answer js-gps-track" role="button" data-gps-track="post.click({ item: 14, priv: 0, post_type: 2 })" data-controller="s-tooltip " data-s-tooltip-placement="bottom" data-s-popover-placement="bottom" aria-controls="" aria-describedby="--stacks-s-tooltip-2r7g81dp">
+        follow
+    </button><div id="--stacks-s-tooltip-2r7g81dp" class="s-popover s-popover__tooltip pe-none" aria-hidden="true" role="tooltip">Follow this answer to receive notifications<div class="s-popover--arrow"></div></div><span class="lsep">|</span><span class="lsep">|</span><span class="lsep">|</span><span class="lsep">|</span></div>
+
+        </div>
+
+
+    <div class="post-signature grid--cell fl0">
+        <div class="user-info user-hover">
+    <div class="user-action-time">
+        answered <span title="2015-03-31 13:36:21Z" class="relativetime">Mar 31 '15 at 13:36</span>
+    </div>
+    <div class="user-gravatar32">
+        <a href="https://stackoverflow.com/users/1388192/erwin-smout"><div class="gravatar-wrapper-32"><img src="Filer_for_database%20-%20Two%20phase%20commit%20-%20Stack%20Overflow/3466b95b663c5d5470fbc587d5372a34.png" alt="" class="bar-sm" width="32" height="32"></div></a>
+    </div>
+    <div class="user-details" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+        <a href="https://stackoverflow.com/users/1388192/erwin-smout">Erwin Smout</a><span class="d-none" itemprop="name">Erwin Smout</span>
+        <div class="-flair">
+            <span class="reputation-score" title="reputation score 16,643" dir="ltr">16.6k</span><span title="4 gold badges" aria-hidden="true"><span class="badge1"></span><span class="badgecount">4</span></span><span class="v-visible-sr">4 gold badges</span><span title="24 silver badges" aria-hidden="true"><span class="badge2"></span><span class="badgecount">24</span></span><span class="v-visible-sr">24 silver badges</span><span title="49 bronze badges" aria-hidden="true"><span class="badge3"></span><span class="badgecount">49</span></span><span class="v-visible-sr">49 bronze badges</span>
+        </div>
+    </div>
+</div>
+
+    </div>
+    </div>
+    
+</div>
+
+
+                <div class="post-layout--right">
+        <div id="comments-29370018" class="comments js-comments-container bt bc-black-2 mt12 " data-post-id="29370018" data-min-length="15">
+            <ul class="comments-list js-comments-list" data-remaining-comments-count="0" data-canpost="false" data-cansee="true" data-comments-unavailable="false" data-addlink-disabled="true">
+
+                        <li id="comment-90214917" class="comment js-comment " data-comment-id="90214917">
+        <div class="js-comment-actions comment-actions">
+            <div class="comment-score js-comment-edit-hide">
+            </div>
+        </div>
+        <div class="comment-text js-comment-text-and-form">
+            <div class="comment-body js-comment-edit-hide">
+                
+                <span class="comment-copy">But the wiki says "After a 
+cohort has sent an agreement message to the coordinator, it will block 
+until a commit or rollback is received". I believe that means B will 
+block after it sends the agreement message, even if the message never 
+reaches TM or the commit/rollback message gets lost on the way back 
+which B simply don't know nor care.</span>
+                
+–&nbsp;<a href="https://stackoverflow.com/users/2961429/du369" title="755 reputation" class="comment-user">du369</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="#comment90214917_29370018"><span title="2018-08-01 03:47:08Z" class="relativetime-clean">Aug 1 '18 at 3:47</span></a></span>
+                        <span title="this comment was edited 1 time">
+                            <svg aria-hidden="true" class="svg-icon va-text-bottom o50 iconPencilSm" width="14" height="14" viewBox="0 0 14 14"><path d="M11.1 1.71l1.13 1.12c.2.2.2.51 0 .71L11.1 4.7 9.21 2.86l1.17-1.15c.2-.2.51-.2.71 0zM2 10.12l6.37-6.43 1.88 1.88L3.88 12H2v-1.88z"></path></svg>
+                        </span>
+            </div>
+        </div>
+    </li>
+    <li id="comment-90214948" class="comment js-comment " data-comment-id="90214948">
+        <div class="js-comment-actions comment-actions">
+            <div class="comment-score js-comment-edit-hide">
+            </div>
+        </div>
+        <div class="comment-text js-comment-text-and-form">
+            <div class="comment-body js-comment-edit-hide">
+                
+                <span class="comment-copy">But B won't block forever. 
+Because under the assumption of "that no node crashes forever" and "that
+ any two nodes can communicate with each other", B will eventually get 
+the commit/rollback message thus complete the whole process. <a href="https://en.wikipedia.org/wiki/Two-phase_commit_protocol" rel="nofollow noreferrer">en.wikipedia.org/wiki/Two-phase_commit_protocol</a></span>
+                
+–&nbsp;<a href="https://stackoverflow.com/users/2961429/du369" title="755 reputation" class="comment-user">du369</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="#comment90214948_29370018"><span title="2018-08-01 03:49:31Z" class="relativetime-clean">Aug 1 '18 at 3:49</span></a></span>
+                        <span title="this comment was edited 3 times">
+                            <svg aria-hidden="true" class="svg-icon va-text-bottom o50 iconPencilSm" width="14" height="14" viewBox="0 0 14 14"><path d="M11.1 1.71l1.13 1.12c.2.2.2.51 0 .71L11.1 4.7 9.21 2.86l1.17-1.15c.2-.2.51-.2.71 0zM2 10.12l6.37-6.43 1.88 1.88L3.88 12H2v-1.88z"></path></svg>
+                        </span>
+            </div>
+        </div>
+    </li>
+    <li id="comment-90217877" class="comment js-comment " data-comment-id="90217877">
+        <div class="js-comment-actions comment-actions">
+            <div class="comment-score js-comment-edit-hide">
+            </div>
+        </div>
+        <div class="comment-text js-comment-text-and-form">
+            <div class="comment-body js-comment-edit-hide">
+                
+                <span class="comment-copy">Another response got the comment that said response "makes the <b><i>dangerous assumption</i></b> that the network is reliable".</span>
+                
+–&nbsp;<a href="https://stackoverflow.com/users/1388192/erwin-smout" title="16,643 reputation" class="comment-user">Erwin Smout</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="#comment90217877_29370018"><span title="2018-08-01 06:34:07Z" class="relativetime-clean">Aug 1 '18 at 6:34</span></a></span>
+                        <span title="this comment was edited 1 time">
+                            <svg aria-hidden="true" class="svg-icon va-text-bottom o50 iconPencilSm" width="14" height="14" viewBox="0 0 14 14"><path d="M11.1 1.71l1.13 1.12c.2.2.2.51 0 .71L11.1 4.7 9.21 2.86l1.17-1.15c.2-.2.51-.2.71 0zM2 10.12l6.37-6.43 1.88 1.88L3.88 12H2v-1.88z"></path></svg>
+                        </span>
+            </div>
+        </div>
+    </li>
+    <li id="comment-90221799" class="comment js-comment " data-comment-id="90221799">
+        <div class="js-comment-actions comment-actions">
+            <div class="comment-score js-comment-edit-hide">
+            </div>
+        </div>
+        <div class="comment-text js-comment-text-and-form">
+            <div class="comment-body js-comment-edit-hide">
+                
+                <span class="comment-copy">That is a dangerous 
+assumption, yes. But I think the two assumptions in the wiki page do not
+ assume the network to be reliable. It just says that any two node "can"
+ communicate with each other, which means, to my understanding, that not
+ all messages are lost on the network. Then with some timeout and 
+retrying mechanism, the agreement message and the commit/rollback 
+message will eventually reach their destination and the algorithm may 
+continue.</span>
+                
+–&nbsp;<a href="https://stackoverflow.com/users/2961429/du369" title="755 reputation" class="comment-user">du369</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="#comment90221799_29370018"><span title="2018-08-01 08:33:40Z" class="relativetime-clean">Aug 1 '18 at 8:33</span></a></span>
+            </div>
+        </div>
+    </li>
+
+            </ul>
+	    </div>
+
+        <div id="comments-link-29370018" data-rep="50" data-anon="true">
+                    <a class="js-add-link comments-link disabled-link" title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”." href="#" role="button">add a comment</a>
+                <span class="js-link-separator dno">&nbsp;|&nbsp;</span>
+            <a class="js-show-link comments-link dno" title="expand to show all comments on this post" href="#" onclick="" role="button"></a>
+        </div>         
+    </div>
+    </div>
+</div>
+
+
+                        <a name="new-answer"></a>
+                            <form id="post-form" action="/questions/7389382/answer/submit" method="post" class="js-add-answer-component post-form">
+                                <input type="hidden" id="post-id" value="7389382">
+                                <input type="hidden" id="qualityBanWarningShown" name="qualityBanWarningShown" value="false">
+                                <input type="hidden" name="referrer" value="https://duckduckgo.com/">
+                                <h2 class="space">
+                                    Your Answer
+                                </h2>
+                                    
+
+    <script>
+        StackExchange.ifUsing("editor", function () {
+            StackExchange.using("externalEditor", function () {
+                StackExchange.using("snippets", function () {
+                    StackExchange.snippets.init();
+                });
+            });
+        }, "code-snippets");
+    </script>
+
+
+<script>
+    StackExchange.ready(function() {
+        var channelOptions = {
+            tags: "".split(" "),
+            id: "1"
+        };
+        initTagRenderer("".split(" "), "".split(" "), channelOptions);
+
+        StackExchange.using("externalEditor", function() {
+            // Have to fire editor after snippets, if snippets enabled
+            if (StackExchange.settings.snippets.snippetsEnabled) {
+                StackExchange.using("snippets", function() {
+                    createEditor();
+                });
+            }
+            else {
+                createEditor();
+            }
+        });
+
+        function createEditor() {
+            StackExchange.prepareEditor({
+                heartbeatType: 'answer',
+                autoActivateHeartbeat: false,
+                convertImagesToLinks: true,
+                noModals: true,
+                showLowRepImageUploadWarning: true,
+                reputationToPostImages: 10,
+                bindNavPrevention: true,
+                postfix: "",
+                imageUploader: {
+                brandingHtml: "Powered by \u003ca class=\"icon-imgur-white\" href=\"https://imgur.com/\"\u003e\u003c/a\u003e",
+                    contentPolicyHtml: "User contributions licensed under \u003ca href=\"https://creativecommons.org/licenses/by-sa/4.0/\"\u003ecc by-sa 4.0 with attribution required\u003c/a\u003e \u003ca href=\"https://stackoverflow.com/legal/content-policy\"\u003e(content policy)\u003c/a\u003e",
+                    allowUrls: true
+                },
+                onDemand: true,
+                discardSelector: ".discard-answer"
+                ,immediatelyShowMarkdownHelp:true
+            });
+                    }
+    });
+</script>
+<div id="post-editor" class="post-editor js-post-editor">
+
+    <div class="ps-relative">
+        <div class="wmd-container mb8">
+            <div id="wmd-button-bar" class="wmd-button-bar btr-sm"><ul id="wmd-button-row" class="wmd-button-row"><li id="wmd-bold-button" class="wmd-button" style="left: 0px;"><span style="background-position: 0px -20px;"></span></li><li id="wmd-italic-button" class="wmd-button" style="left: 25px;"><span style="background-position: -20px -20px;"></span></li><li id="wmd-spacer1" class="wmd-spacer" style="left: 50px;"><span style="background-position: -40px -20px;"></span></li><li id="wmd-link-button" class="wmd-button" style="left: 75px;"><span style="background-position: -40px -20px;"></span></li><li id="wmd-quote-button" class="wmd-button" style="left: 100px;"><span style="background-position: -60px -20px;"></span></li><li id="wmd-code-button" class="wmd-button" style="left: 125px;"><span style="background-position: -80px -20px;"></span></li><li id="wmd-image-button" class="wmd-button" style="left: 150px;"><span style="background-position: -100px -20px;"></span></li><li id="wmd-spacer2" class="wmd-spacer" style="left: 175px;"><span style="background-position: -120px -20px;"></span></li><li id="wmd-olist-button" class="wmd-button" style="left: 200px;"><span style="background-position: -120px -20px;"></span></li><li id="wmd-ulist-button" class="wmd-button" style="left: 225px;"><span style="background-position: -140px -20px;"></span></li><li id="wmd-heading-button" class="wmd-button" style="left: 250px;"><span style="background-position: -160px -20px;"></span></li><li id="wmd-hr-button" class="wmd-button" style="left: 275px;"><span style="background-position: -180px -20px;"></span></li><li id="wmd-spacer3" class="wmd-spacer" style="left: 300px;"><span style="background-position: -200px -20px;"></span></li><li id="wmd-undo-button" class="wmd-button" style="left: 325px;"><span style="background-position: -200px -20px;"></span></li><li id="wmd-redo-button" class="wmd-button" style="left: 350px;"><span style="background-position: -220px -20px;"></span></li><li class="wmd-spacer wmd-spacer-max"></li></ul></div>
+            <div class="js-stacks-validation">
+                <div class="ps-relative">
+                    <textarea id="wmd-input" name="post-text" class="wmd-input s-input bar0 js-post-body-field" data-post-type-id="2" cols="92" rows="15" tabindex="101" data-min-length=""></textarea>
+                </div>
+                <div class="s-input-message mt4 d-none js-stacks-validation-message"></div>
+            </div>
+        </div>
+    </div>
+
+    <aside class="grid ai-start jc-space-between js-answer-help s-notice s-notice__warning pb0 pr4 pt4 mb8 d-none" role="status" aria-hidden="true">
+    <div class="grid--cell pt8">
+        <p>Thanks for contributing an answer to Stack Overflow!</p><ul><li>Please be sure to <em>answer the question</em>. Provide details and share your research!</li></ul><p>But <em>avoid</em> …</p><ul><li>Asking for help, clarification, or responding to other answers.</li><li>Making statements based on opinion; back them up with references or personal experience.</li></ul><p>To learn more, see our <a href="https://stackoverflow.com/help/how-to-answer">tips on writing great answers</a>.</p>
+    </div>
+    <button class="grid--cell js-answer-help-close-btn s-btn s-btn__muted fc-dark">
+        <svg aria-hidden="true" class="svg-icon iconClear" width="18" height="18" viewBox="0 0 18 18"><path d="M15 4.41L13.59 3 9 7.59 4.41 3 3 4.41 7.59 9 3 13.59 4.41 15 9 10.41 13.59 15 15 13.59 10.41 9 15 4.41z"></path></svg>
+    </button>
+</aside>
+
+
+    <div id="draft-saved" class="fc-success float-left h24" style="display:none;">Draft saved</div>
+    <div id="draft-discarded" class="fc-error float-left h24" style="display:none;">Draft discarded</div>
+
+
+
+        <div id="wmd-preview" class="wmd-preview"></div>
+        <div></div>
+        <div class="edit-block">
+            <input id="fkey" name="fkey" type="hidden" value="dde09abba620fb758c6b5d6a00c08dc3b49d4d5f320222f736a541e56cbee977">
+            <input id="author" name="author" type="text">
+        </div>
+
+</div>
+
+
+                                <div class="ps-relative">
+                                                <div class="form-item new-post-login p0 my16">
+                <div class="grid gs16 md:fd-column new-login-form">
+                    <div class="grid fd-column w50 md:w-auto gsy gs8 jc-space-between new-login-left">
+                        <h3 class="grid--cell fs-title">Sign up or <a id="login-link" href="https://stackoverflow.com/users/login?ssrc=question_page&amp;returnurl=https%3a%2f%2fstackoverflow.com%2fquestions%2f7389382%2ftwo-phase-commit%23new-answer">log in</a></h3>
+                        <script>
+                            StackExchange.ready(function () {
+                                StackExchange.helpers.onClickDraftSave('#login-link');
+                            });
+                        </script>
+                        <div class="grid--cell s-btn s-btn__muted s-btn__outlined s-btn__icon google-login" data-ga="[&quot;sign up&quot;,&quot;Sign Up Started - Google&quot;,&quot;New Post&quot;,null,null]">
+                            <svg aria-hidden="true" class="svg-icon native iconGoogle" width="18" height="18" viewBox="0 0 18 18"><path d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z" fill="#4285F4"></path><path d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z" fill="#34A853"></path><path d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z" fill="#FBBC05"></path><path d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z" fill="#EA4335"></path></svg> Sign up using Google
+                        </div>
+                        <div class="grid--cell s-btn s-btn__muted s-btn__icon facebook-login" data-ga="[&quot;sign up&quot;,&quot;Sign Up Started - Facebook&quot;,&quot;New Post&quot;,null,null]">
+                            <svg aria-hidden="true" class="svg-icon iconFacebook" width="18" height="18" viewBox="0 0 18 18"><path d="M3 1a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H3zm6.55 16v-6.2H7.46V8.4h2.09V6.61c0-2.07 1.26-3.2 3.1-3.2.88 0 1.64.07 1.87.1v2.16h-1.29c-1 0-1.19.48-1.19 1.18V8.4h2.39l-.31 2.42h-2.08V17h-2.5z" fill="#4167B2"></path></svg> Sign up using Facebook
+                        </div>
+                        <div class="grid--cell s-btn s-btn__muted s-btn__outlined s-btn__icon stackexchange-login" data-ga="[&quot;sign up&quot;,&quot;Sign Up Navigation&quot;,&quot;New Post&quot;,null,null]">
+                            <svg aria-hidden="true" class="svg-icon native iconLogoGlyphXSm" width="18" height="18" viewBox="0 0 18 18"><path d="M14 16v-5h2v7H2v-7h2v5h10z" fill="#BCBBBB"></path><path d="M12.09.72l-1.21.9 4.5 6.07 1.22-.9L12.09.71zM5 15h8v-2H5v2zm9.15-5.87L8.35 4.3l.96-1.16 5.8 4.83-.96 1.16zm-7.7-1.47l6.85 3.19.63-1.37-6.85-3.2-.63 1.38zm6.53 5L5.4 11.39l.38-1.67 7.42 1.48-.22 1.46z" fill="#F48024"></path></svg> Sign up using Email and Password
+                        </div>
+                    </div>
+                    <input type="hidden" name="use-facebook" class="use-facebook" value="false">
+                    <input type="hidden" name="use-google" class="use-google" value="false">
+                    <button type="button" class="d-none js-submit-openid">Submit</button>
+                    <div class="grid gsy gs8 fd-column w50 md:w-auto new-login-right form-item p0">
+                                <h3 class="grid--cell fs-title">Post as a guest</h3>
+            <div class="grid--cell">
+                <div class="grid gs4 gsy fd-column">
+                    <label class="s-label" for="display-name">Name</label>
+                    <div class="grid ps-relative">
+                        <input class="s-input" id="display-name" name="display-name" maxlength="30" type="text" tabindex="105" placeholder="">
+                    </div>
+                </div>
+            </div>
+            <div class="grid--cell">
+                <div class="grid gs4 gsy fd-column">
+                    <div class="grid--cell">
+                        <div class="grid gs2 gsy fd-column">
+                            <label class="grid--cell s-label" for="m-address">Email</label>
+                            <p class="grid--cell s-description">Required, but never shown</p>
+                        </div>
+                    </div>
+                    <div class="grid ps-relative">
+                        <input class="s-input js-post-email-field" id="m-address" name="m-address" type="text" size="40" tabindex="106" placeholder="">
+                    </div>
+                </div>
+            </div>
+
+                    </div>
+                </div>
+            </div>
+            <script>
+                StackExchange.ready(
+                    function () {
+                        StackExchange.openid.initPostLogin('.new-post-login', 'https%3a%2f%2fstackoverflow.com%2fquestions%2f7389382%2ftwo-phase-commit%23new-answer', 'question_page');
+                    }
+                );
+            </script>
+            <noscript>
+                        <h3 class="grid--cell fs-title">Post as a guest</h3>
+            <div class="grid--cell">
+                <div class="grid gs4 gsy fd-column">
+                    <label class="s-label" for="display-name">Name</label>
+                    <div class="grid ps-relative">
+                        <input class="s-input" id="display-name" name="display-name" maxlength="30" type="text" value="" tabindex="105" placeholder="" />
+                    </div>
+                </div>
+            </div>
+            <div class="grid--cell">
+                <div class="grid gs4 gsy fd-column">
+                    <div class="grid--cell">
+                        <div class="grid gs2 gsy fd-column">
+                            <label class="grid--cell s-label" for="m-address">Email</label>
+                            <p class="grid--cell s-description">Required, but never shown</p>
+                        </div>
+                    </div>
+                    <div class="grid ps-relative">
+                        <input class="s-input js-post-email-field" id="m-address" name="m-address" type="text" value="" size="40" tabindex="106" placeholder="" />
+                    </div>
+                </div>
+            </div>
+
+            </noscript>
+
+                                </div>
+
+                                    <div class="form-submit cbt grid gsx gs4">
+                                        <button id="submit-button" class="grid--cell s-btn s-btn__primary s-btn__icon" type="submit" tabindex="120" autocomplete="off">
+Post Your Answer                                        </button>
+                                        <button class="grid--cell s-btn s-btn__danger discard-answer dno">
+                                            Discard
+                                        </button>
+                                            <p class="privacy-policy-agreement">
+                                                By clicking “Post Your Answer”, you agree to our <a href="https://stackoverflow.com/legal/terms-of-service/public" name="tos" target="_blank" class="-link">terms of service</a>, <a href="https://stackoverflow.com/legal/privacy-policy" name="privacy" target="_blank" class="-link">privacy policy</a> and <a href="https://stackoverflow.com/legal/cookie-policy" name="cookie" target="_blank" class="-link">cookie policy</a><input type="hidden" name="legalLinksShown" value="1">
+                                            </p>
+                                        
+                                    </div>
+                                    <div class="js-general-error general-error cbt d-none"></div>
+                            </form>
+
+
+
+                            <h2 class="bottom-notice" data-loc="1">
+Not the answer you're looking for? Browse other questions tagged <a href="https://stackoverflow.com/questions/tagged/database" class="post-tag" title="show questions tagged 'database'" rel="tag">database</a> <a href="https://stackoverflow.com/questions/tagged/distributed-transactions" class="post-tag" title="show questions tagged 'distributed-transactions'" rel="tag">distributed-transactions</a>  or <a href="https://stackoverflow.com/questions/ask">ask your own question</a>.                            </h2>
+                </div>
+            </div>
+            <div id="sidebar" class="show-votes" role="complementary" aria-label="sidebar">
+                
+<div class="s-sidebarwidget s-sidebarwidget__yellow s-anchors s-anchors__grayscale mb16" data-tracker="cb=1">
+                <div class="s-sidebarwidget--header s-sidebarwidget__small-bold-text fc-light d:fc-black-900">
+                    The Overflow Blog
+                </div>
+            <ul class="s-sidebarwidget--content s-sidebarwidget__items pt0 pr16 pb0 pl16">
+    <li class="s-sidebarwidget--item grid">
+        <div class="grid--cell1 fl-shrink0">
+                <a href="https://stackoverflow.blog/2020/04/01/ultra-dark-mode-april-fools/?cb=1" data-ga="[&quot;community bulletin board&quot;,&quot;The Overflow Blog&quot;,&quot;https://stackoverflow.blog/2020/04/01/ultra-dark-mode-april-fools/&quot;,null,null]">
+<svg aria-hidden="true" class="svg-icon va-text-top iconPencilSm" width="14" height="14" viewBox="0 0 14 14"><path d="M11.1 1.71l1.13 1.12c.2.2.2.51 0 .71L11.1 4.7 9.21 2.86l1.17-1.15c.2-.2.51-.2.71 0zM2 10.12l6.37-6.43 1.88 1.88L3.88 12H2v-1.88z"></path></svg>                </a>
+        </div>
+        <div class="grid--cell">
+            <a href="https://stackoverflow.blog/2020/04/01/ultra-dark-mode-april-fools/?cb=1" class="js-gps-track" data-ga="[&quot;community bulletin board&quot;,&quot;The Overflow Blog&quot;,&quot;https://stackoverflow.blog/2020/04/01/ultra-dark-mode-april-fools/&quot;,null,null]" data-gps-track="communitybulletin.click({ priority: 1, position: 0 })">You like our dark mode? Well, wait until you try our Ultra Dark Mode</a>
+        </div>
+    </li>
+            </ul>
+            <ul class="s-sidebarwidget--content s-sidebarwidget__items pt0 pr16 pb0 pl16">
+    <li class="s-sidebarwidget--item grid">
+        <div class="grid--cell1 fl-shrink0">
+                <a href="https://stackoverflow.blog/2020/04/03/podcast-223-embrace-the-darkness/?cb=1" data-ga="[&quot;community bulletin board&quot;,&quot;The Overflow Blog&quot;,&quot;https://stackoverflow.blog/2020/04/03/podcast-223-embrace-the-darkness/&quot;,null,null]">
+<svg aria-hidden="true" class="svg-icon va-text-top iconPencilSm" width="14" height="14" viewBox="0 0 14 14"><path d="M11.1 1.71l1.13 1.12c.2.2.2.51 0 .71L11.1 4.7 9.21 2.86l1.17-1.15c.2-.2.51-.2.71 0zM2 10.12l6.37-6.43 1.88 1.88L3.88 12H2v-1.88z"></path></svg>                </a>
+        </div>
+        <div class="grid--cell">
+            <a href="https://stackoverflow.blog/2020/04/03/podcast-223-embrace-the-darkness/?cb=1" class="js-gps-track" data-ga="[&quot;community bulletin board&quot;,&quot;The Overflow Blog&quot;,&quot;https://stackoverflow.blog/2020/04/03/podcast-223-embrace-the-darkness/&quot;,null,null]" data-gps-track="communitybulletin.click({ priority: 1, position: 1 })">Podcast 223: Embrace the Darkness</a>
+        </div>
+    </li>
+            </ul>
+                <div class="s-sidebarwidget--header s-sidebarwidget__small-bold-text fc-light d:fc-black-900">
+                    Featured on Meta
+                </div>
+            <ul class="s-sidebarwidget--content s-sidebarwidget__items pt0 pr16 pb0 pl16">
+    <li class="s-sidebarwidget--item grid">
+        <div class="grid--cell1 fl-shrink0">
+                <a href="https://meta.stackexchange.com/questions/345032/community-and-moderator-guidelines-for-escalating-issues-via-new-response-proces?cb=1" data-ga="[&quot;community bulletin board&quot;,&quot;Featured on Meta&quot;,&quot;https://meta.stackexchange.com/questions/345032/community-and-moderator-guidelines-for-escalating-issues-via-new-response-proces&quot;,null,null]">
+<div class="favicon favicon-stackexchangemeta" title="Meta Stack Exchange"></div>                </a>
+        </div>
+        <div class="grid--cell">
+            <a href="https://meta.stackexchange.com/questions/345032/community-and-moderator-guidelines-for-escalating-issues-via-new-response-proces?cb=1" class="js-gps-track" title="Community and Moderator guidelines for escalating issues via new response process (March-April 2020)" data-ga="[&quot;community bulletin board&quot;,&quot;Featured on Meta&quot;,&quot;https://meta.stackexchange.com/questions/345032/community-and-moderator-guidelines-for-escalating-issues-via-new-response-proces&quot;,null,null]" data-gps-track="communitybulletin.click({ priority: 3, position: 2 })">Community and Moderator guidelines for escalating issues via new response…</a>
+        </div>
+    </li>
+            </ul>
+            <ul class="s-sidebarwidget--content s-sidebarwidget__items pt0 pr16 pb0 pl16">
+    <li class="s-sidebarwidget--item grid">
+        <div class="grid--cell1 fl-shrink0">
+                <a href="https://meta.stackoverflow.com/questions/394498/triage-needs-to-be-fixed-urgently-and-users-need-to-be-notified-upon-receiving?cb=1" data-ga="[&quot;community bulletin board&quot;,&quot;Featured on Meta&quot;,&quot;https://meta.stackoverflow.com/questions/394498/triage-needs-to-be-fixed-urgently-and-users-need-to-be-notified-upon-receiving&quot;,null,null]">
+<div class="favicon favicon-stackoverflowmeta" title="Meta Stack Overflow"></div>                </a>
+        </div>
+        <div class="grid--cell">
+            <a href="https://meta.stackoverflow.com/questions/394498/triage-needs-to-be-fixed-urgently-and-users-need-to-be-notified-upon-receiving?cb=1" class="js-gps-track" title="Triage needs to be fixed urgently, and users need to be notified upon receiving a review ban!" data-ga="[&quot;community bulletin board&quot;,&quot;Featured on Meta&quot;,&quot;https://meta.stackoverflow.com/questions/394498/triage-needs-to-be-fixed-urgently-and-users-need-to-be-notified-upon-receiving&quot;,null,null]" data-gps-track="communitybulletin.click({ priority: 6, position: 3 })">Triage needs to be fixed urgently, and users need to be notified upon…</a>
+        </div>
+    </li>
+            </ul>
+            <ul class="s-sidebarwidget--content s-sidebarwidget__items pt0 pr16 pb0 pl16">
+    <li class="s-sidebarwidget--item grid">
+        <div class="grid--cell1 fl-shrink0">
+                <a href="https://meta.stackoverflow.com/questions/394871/upcoming-feature-new-question-close-experience?cb=1" data-ga="[&quot;community bulletin board&quot;,&quot;Featured on Meta&quot;,&quot;https://meta.stackoverflow.com/questions/394871/upcoming-feature-new-question-close-experience&quot;,null,null]">
+<div class="favicon favicon-stackoverflowmeta" title="Meta Stack Overflow"></div>                </a>
+        </div>
+        <div class="grid--cell">
+            <a href="https://meta.stackoverflow.com/questions/394871/upcoming-feature-new-question-close-experience?cb=1" class="js-gps-track" data-ga="[&quot;community bulletin board&quot;,&quot;Featured on Meta&quot;,&quot;https://meta.stackoverflow.com/questions/394871/upcoming-feature-new-question-close-experience&quot;,null,null]" data-gps-track="communitybulletin.click({ priority: 6, position: 4 })">Upcoming Feature: New Question Close Experience</a>
+        </div>
+    </li>
+            </ul>
+            <ul class="s-sidebarwidget--content s-sidebarwidget__items pt0 pr16 pb0 pl16">
+    <li class="s-sidebarwidget--item grid">
+        <div class="grid--cell1 fl-shrink0">
+                <a href="https://meta.stackoverflow.com/questions/395949/dark-mode-beta-help-us-root-out-low-contrast-and-un-converted-bits?cb=1" data-ga="[&quot;community bulletin board&quot;,&quot;Featured on Meta&quot;,&quot;https://meta.stackoverflow.com/questions/395949/dark-mode-beta-help-us-root-out-low-contrast-and-un-converted-bits&quot;,null,null]">
+<div class="favicon favicon-stackoverflowmeta" title="Meta Stack Overflow"></div>                </a>
+        </div>
+        <div class="grid--cell">
+            <a href="https://meta.stackoverflow.com/questions/395949/dark-mode-beta-help-us-root-out-low-contrast-and-un-converted-bits?cb=1" class="js-gps-track" data-ga="[&quot;community bulletin board&quot;,&quot;Featured on Meta&quot;,&quot;https://meta.stackoverflow.com/questions/395949/dark-mode-beta-help-us-root-out-low-contrast-and-un-converted-bits&quot;,null,null]" data-gps-track="communitybulletin.click({ priority: 6, position: 5 })">Dark Mode Beta - help us root out low-contrast and un-converted bits</a>
+        </div>
+    </li>
+            </ul>
+</div>
+
+
+<div id="dfp-tsb" class="everyonelovesstackoverflow everyoneloves__top-sidebar" data-dfp-zone="true"></div>
+<div id="dfp-msb" class="everyonelovesstackoverflow everyoneloves__mid-sidebar" data-dfp-zone="true"></div>
+<div id="hireme"></div>
+                <div class="module sidebar-linked">
+	<h4 id="h-linked">Linked</h4>
+	<div class="linked" data-tracker="lq=1">
+		    
+<div class="spacer js-gps-track" data-gps-track="linkedquestion.click({ source_post_id: 7389382, target_question_id: 16688739, position: 0 })">
+	<a href="https://stackoverflow.com/q/16688739?lq=1" title="Vote score (upvotes - downvotes)">
+		<div class="answer-votes  default">1</div>
+	</a>
+	<a href="https://stackoverflow.com/questions/16688739/two-phase-commit-protocol-with-transaction-manager?noredirect=1&amp;lq=1" class="question-hyperlink">two phase commit protocol with Transaction Manager</a>
+</div>
+		    
+<div class="spacer js-gps-track" data-gps-track="linkedquestion.click({ source_post_id: 7389382, target_question_id: 59057621, position: 1 })">
+	<a href="https://stackoverflow.com/q/59057621?lq=1" title="Vote score (upvotes - downvotes)">
+		<div class="answer-votes answered-accepted default">0</div>
+	</a>
+	<a href="https://stackoverflow.com/questions/59057621/using-two-phase-commits-on-postgres?noredirect=1&amp;lq=1" class="question-hyperlink">Using two phase commits on postgres</a>
+</div>
+	</div>
+</div>
+
+
+                    <div class="module sidebar-related">
+                        <h4 id="h-related">Related</h4>
+                        <div class="related js-gps-related-questions" data-tracker="rq=1">
+                            <div class="spacer js-gps-track"><a href="https://stackoverflow.com/q/171876?rq=1" title="Vote score (upvotes - downvotes)"><div class="answer-votes answered-accepted default">68</div></a><a href="https://stackoverflow.com/questions/171876/how-do-two-phase-commits-prevent-last-second-failure?rq=1" class="question-hyperlink">How do two-phase commits prevent last-second failure?</a></div><div class="spacer js-gps-track"><a href="https://stackoverflow.com/q/4639740?rq=1" title="Vote score (upvotes - downvotes)"><div class="answer-votes default">14</div></a><a href="https://stackoverflow.com/questions/4639740/how-acid-is-the-two-phase-commit-protocol?rq=1" class="question-hyperlink">How ACID is the two-phase commit protocol?</a></div><div class="spacer js-gps-track"><a href="https://stackoverflow.com/q/7149890?rq=1" title="Vote score (upvotes - downvotes)"><div class="answer-votes answered-accepted large">225</div></a><a href="https://stackoverflow.com/questions/7149890/what-did-mongodb-not-being-acid-compliant-before-v4-really-mean?rq=1" class="question-hyperlink">What did MongoDB not being ACID compliant before v4 really mean?</a></div><div class="spacer js-gps-track"><a href="https://stackoverflow.com/q/13425824?rq=1" title="Vote score (upvotes - downvotes)"><div class="answer-votes answered-accepted default">1</div></a><a href="https://stackoverflow.com/questions/13425824/xa-two-phase-commit-and-execution-in-prepare-phase?rq=1" class="question-hyperlink">XA Two Phase Commit and execution in Prepare Phase?</a></div><div class="spacer js-gps-track"><a href="https://stackoverflow.com/q/17038102?rq=1" title="Vote score (upvotes - downvotes)"><div class="answer-votes answered-accepted default">0</div></a><a href="https://stackoverflow.com/questions/17038102/common-apis-to-enable-transactions-across-heterogenous-data-sources?rq=1" class="question-hyperlink">common APIs to enable transactions across heterogenous data sources</a></div><div class="spacer js-gps-track"><a href="https://stackoverflow.com/q/35619325?rq=1" title="Vote score (upvotes - downvotes)"><div class="answer-votes default">5</div></a><a href="https://stackoverflow.com/questions/35619325/why-is-two-phase-commit-considered-atomic?rq=1" class="question-hyperlink">Why is two-phase commit considered atomic?</a></div><div class="spacer js-gps-track"><a href="https://stackoverflow.com/q/45977728?rq=1" title="Vote score (upvotes - downvotes)"><div class="answer-votes answered-accepted default">0</div></a><a href="https://stackoverflow.com/questions/45977728/how-do-narayana-xa-recover-from-tm-failures?rq=1" class="question-hyperlink">How do Narayana/XA recover from TM failures?</a></div>
+                        </div>
+                    </div>
+
+                <div id="hot-network-questions" class="module tex2jax_ignore">
+    <h4>
+        <a href="https://stackexchange.com/questions?tab=hot" class="js-gps-track s-link s-link__inherit" data-gps-track="posts_hot_network.click({ item_type:1, location:11 })">
+            Hot Network Questions
+        </a>
+    </h4>
+    <ul>
+            <li>
+                <div class="favicon favicon-english" title="English Language &amp; Usage Stack Exchange"></div><a href="https://english.stackexchange.com/questions/529416/noun-to-be-stuck-in-the-past-to-not-progress" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:97 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Noun to be stuck in the past, to not progress
+                </a>
+
+            </li>
+            <li>
+                <div class="favicon favicon-puzzling" title="Puzzling Stack Exchange"></div><a href="https://puzzling.stackexchange.com/questions/96639/2-there-once-was-an-item" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:559 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    (2) There once was an item
+                </a>
+
+            </li>
+            <li>
+                <div class="favicon favicon-rpg" title="Role-playing Games Stack Exchange"></div><a href="https://rpg.stackexchange.com/questions/167067/how-can-a-dm-make-a-low-level-melee-rogue-feel-useful-in-combat-when-the-party-h" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:122 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    How can a DM make a low-level melee rogue feel 
+useful in combat when the party has no tank who triggers sneak attack 
+for her?
+                </a>
+
+            </li>
+            <li>
+                <div class="favicon favicon-diy" title="Home Improvement Stack Exchange"></div><a href="https://diy.stackexchange.com/questions/189060/connecting-a-makita-jigsaw-4351-to-dry-vacuum-cleaner-dyson" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:73 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Connecting a Makita jigsaw (4351) to dry vacuum cleaner (Dyson)
+                </a>
+
+            </li>
+            <li>
+                <div class="favicon favicon-worldbuilding" title="Worldbuilding Stack Exchange"></div><a href="https://worldbuilding.stackexchange.com/questions/173379/why-would-a-future-military-field-trench-coats" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:579 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Why would a future military field trench coats?
+                </a>
+
+            </li>
+            <li class="js-hidden" style="">
+                <div class="favicon favicon-stats" title="Cross Validated"></div><a href="https://stats.stackexchange.com/questions/458341/what-distribution-does-the-mean-of-a-random-sample-from-a-uniform-distribution-f" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:65 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    What distribution does the mean of a random sample from a Uniform distribution follow?
+                </a>
+
+            </li>
+            <li class="js-hidden" style="">
+                <div class="favicon favicon-medicalsciences" title="Medical Sciences Stack Exchange"></div><a href="https://medicalsciences.stackexchange.com/questions/22937/would-the-human-seasonal-coronaviruses-be-just-as-deadly-as-covid-19-in-a-popula" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:607 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Would the human seasonal coronaviruses be just as deadly as COVID-19 in a population with no prior immunity?
+                </a>
+
+            </li>
+            <li class="js-hidden" style="">
+                <div class="favicon favicon-diy" title="Home Improvement Stack Exchange"></div><a href="https://diy.stackexchange.com/questions/189093/electrical-max-number-of-branches-on-one-circuit" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:73 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    ELECTRICAL - Max number of branches on one circuit?
+                </a>
+
+            </li>
+            <li class="js-hidden" style="">
+                <div class="favicon favicon-codereview" title="Code Review Stack Exchange"></div><a href="https://codereview.stackexchange.com/questions/239887/calculate-the-intersection-area-of-two-rectangles" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:196 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Calculate the intersection area of two rectangles
+                </a>
+
+            </li>
+            <li class="js-hidden" style="">
+                <div class="favicon favicon-superuser" title="Super User"></div><a href="https://superuser.com/questions/1538492/is-ram-that-is-sold-as-server-ram-compatible-with-desktop-pc-and-why" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:3 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Is RAM that is sold as server-RAM compatible with desktop-PC and why?
+                </a>
+
+            </li>
+            <li class="js-hidden" style="">
+                <div class="favicon favicon-softwareengineering" title="Software Engineering Stack Exchange"></div><a href="https://softwareengineering.stackexchange.com/questions/408232/un-ticketed-work-how-much-is-too-much" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:131 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Un-ticketed work, how much is too much?
+                </a>
+
+            </li>
+            <li class="js-hidden" style="">
+                <div class="favicon favicon-salesforce" title="Salesforce Stack Exchange"></div><a href="https://salesforce.stackexchange.com/questions/301291/why-salesforce-doesnt-allow-us-to-do-call-out-after-a-dml-operation-what-they" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:459 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Why Salesforce doesn't allow us to do call-out after
+ a DML operation? What they exactly mean by uncommitted work pending?
+                </a>
+
+            </li>
+            <li class="js-hidden" style="">
+                <div class="favicon favicon-electronics" title="Electrical Engineering Stack Exchange"></div><a href="https://electronics.stackexchange.com/questions/490615/can-i-safely-use-a-6-a-600-v-diode-in-place-of-a-6-a-400-v-diode" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:135 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Can I safely use a 6 A, 600 V diode in place of a 6 A, 400 V diode?
+                </a>
+
+            </li>
+            <li class="js-hidden" style="">
+                <div class="favicon favicon-stackoverflow" title="Stack Overflow"></div><a href="https://stackoverflow.com/questions/61008937/python-round-to-next-highest-power-of-10" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:1 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Python round to next highest power of 10
+                </a>
+
+            </li>
+            <li class="js-hidden" style="">
+                <div class="favicon favicon-music" title="Music: Practice &amp; Theory Stack Exchange"></div><a href="https://music.stackexchange.com/questions/97856/how-can-i-count-this-unusual-rhythm" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:240 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    How can I count this unusual rhythm?
+                </a>
+
+            </li>
+            <li class="js-hidden" style="">
+                <div class="favicon favicon-rpg" title="Role-playing Games Stack Exchange"></div><a href="https://rpg.stackexchange.com/questions/167085/is-it-possible-to-emulate-common-polyhedral-dice-rolls-using-just-a-d6-and-if-s" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:122 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Is it possible to emulate common polyhedral dice rolls using just a d6, and if so, how?
+                </a>
+
+            </li>
+            <li class="js-hidden" style="">
+                <div class="favicon favicon-electronics" title="Electrical Engineering Stack Exchange"></div><a href="https://electronics.stackexchange.com/questions/490701/feedback-resistor-value-in-op-amp-integrator" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:135 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Feedback resistor value in op amp integrator
+                </a>
+
+            </li>
+            <li class="js-hidden" style="">
+                <div class="favicon favicon-scifi" title="Science Fiction &amp; Fantasy Stack Exchange"></div><a href="https://scifi.stackexchange.com/questions/229414/why-didnt-anyone-save-thorin" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:186 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Why didn't anyone save Thorin?
+                </a>
+
+            </li>
+            <li class="js-hidden" style="">
+                <div class="favicon favicon-mathematica" title="Mathematica Stack Exchange"></div><a href="https://mathematica.stackexchange.com/questions/218592/how-to-remove-the-sign-before-the-element" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:387 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    How to remove the sign before the element
+                </a>
+
+            </li>
+            <li class="js-hidden" style="">
+                <div class="favicon favicon-academia" title="Academia Stack Exchange"></div><a href="https://academia.stackexchange.com/questions/147196/journal-requires-permission-to-acknowledge-people-person-not-replying" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:415 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Journal requires permission to acknowledge people: person not replying
+                </a>
+
+            </li>
+            <li class="js-hidden" style="">
+                <div class="favicon favicon-gardening" title="Gardening &amp; Landscaping Stack Exchange"></div><a href="https://gardening.stackexchange.com/questions/51032/what-is-the-most-efficient-way-to-remove-a-row-of-bushes" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:269 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    What is the most efficient way to remove a row of bushes?
+                </a>
+
+            </li>
+            <li class="js-hidden" style="">
+                <div class="favicon favicon-academia" title="Academia Stack Exchange"></div><a href="https://academia.stackexchange.com/questions/147218/how-do-i-write-a-formal-resignation-letter-to-my-toxic-pi-advisor" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:415 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    How do I write a formal resignation letter to my toxic PI advisor
+                </a>
+
+            </li>
+            <li class="js-hidden" style="">
+                <div class="favicon favicon-gis" title="Geographic Information Systems Stack Exchange"></div><a href="https://gis.stackexchange.com/questions/356976/count-number-of-points-by-name-within-distinct-polygons" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:79 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Count number of points by name within distinct polygons
+                </a>
+
+            </li>
+            <li class="js-hidden" style="">
+                <div class="favicon favicon-travel" title="Travel Stack Exchange"></div><a href="https://travel.stackexchange.com/questions/156507/british-citizen-without-e-passport-wishing-to-visit-usa-in-2021" class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:11, target_site:273 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    British citizen without e-passport wishing to visit USA in 2021
+                </a>
+
+            </li>
+    </ul>
+
+        
+</div>
+
+                            <div id="feed-link" class="js-feed-link">
+        <a href="https://stackoverflow.com/feeds/question/7389382" title="Feed of this question and its answers">
+            <svg aria-hidden="true" class="svg-icon fc-orange-400 iconRss" width="18" height="18" viewBox="0 0 18 18"><path d="M1 3c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3zm14.5 12C15.5 8.1 9.9 2.5 3 2.5V5a10 10 0 0 1 10 10h2.5zm-5 0A7.5 7.5 0 0 0 3 7.5V10a5 5 0 0 1 5 5h2.5zm-5 0A2.5 2.5 0 0 0 3 12.5V15h2.5z"></path></svg>
+            Question feed
+        </a>
+    </div>
+    <aside class="s-modal js-feed-link-modal" tabindex="-1" role="dialog" aria-labelledby="feed-modal-title" aria-describedby="feed-modal-description" aria-hidden="true">
+        <div class="s-modal--dialog js-modal-dialog wmx4" role="document" data-controller="se-draggable">
+            <h1 class="s-modal--header fw-bold js-first-tabbable c-move" id="feed-modal-title" data-target="se-draggable.handle" tabindex="0">
+                Subscribe to RSS
+            </h1>
+            <div class="grid gs4 gsy fd-column">
+                <div class="grid--cell">
+                    <label class="d-block s-label c-default" for="feed-url">
+                        Question feed
+                        <p class="s-description mt2" id="feed-modal-description">To subscribe to this RSS feed, copy and paste this URL into your RSS reader.</p>
+                    </label>
+                </div>
+                <div class="grid ps-relative">
+                    <input class="s-input" type="text" name="feed-url" id="feed-url" readonly="readonly" value="https://stackoverflow.com/feeds/question/7389382">
+                    <svg aria-hidden="true" class="svg-icon s-input-icon fc-orange-400 iconRss" width="18" height="18" viewBox="0 0 18 18"><path d="M1 3c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3zm14.5 12C15.5 8.1 9.9 2.5 3 2.5V5a10 10 0 0 1 10 10h2.5zm-5 0A7.5 7.5 0 0 0 3 7.5V10a5 5 0 0 1 5 5h2.5zm-5 0A2.5 2.5 0 0 0 3 12.5V15h2.5z"></path></svg>
+                </div>
+            </div>
+            <a class="s-modal--close s-btn s-btn__muted js-modal-close js-last-tabbable" href="#" aria-label="Close">
+                <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14"><path d="M12 3.41L10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41z"></path></svg>
+            </a>
+        </div>
+    </aside>
+
+            </div>
+    </div>
+<script>StackExchange.ready(function(){$.get('/posts/7389382/ivc/020e');});</script>
+<noscript><div><img src="/posts/7389382/ivc/020e" class="dno" alt="" width="0" height="0"></div></noscript><div style="display:none" id="prettify-lang"></div></div>
+
+
+        </div>
+    </div>
+        
+<script>;try{(function(a){function b(a){return'string'==typeof a?document.getElementById(a):a}function c(a){return a=b(a),!!a&&'none'===getComputedStyle(a).display}function d(a){return!c(a)}function e(a){return!!a}function f(a){return /^\s*$/.test(b(a).innerHTML)}function g(a){var b=a.style;b.height=b.maxHeight=b.minHeight='auto',b.display='none',[].forEach.call(a.children,g)}function h(a,b){var c;return function(){return a&&(c=a.call(b||this,arguments),a=null),c}}function i(a){var b=document.createElement('script');b.src=a,document.body.appendChild(b)}function j(a){return k([],a)}function k(a,b){return a.push=function(a){return b(),delete this.push,this.push(a)},a}function l(){try{return!new Function('return async()=>{};')}catch(a){return!0}}function m(){return'undefined'!=typeof googletag&&!!googletag.apiReady}function n(){m()||(googletag={cmd:j(A)})}function o(){var a=document.createElement('div');a.className='adsbox',a.id='clc-abd',a.style.position='absolute',a.style.pointerEvents='none',a.innerHTML='&nbsp;',document.body.appendChild(a)}function p(){return Object.keys(E.ids)}function r(a){var b=E.ids[a],c=E.slots[b];'function'==typeof c&&(c=c(a));return{path:'/'+B+'/'+D+'/'+b+'/'+C,sizes:c,zone:b}}function q(a){try{var b=a.slot.getSlotElementId(),c=[];b||c.push('id=0');var d=document.getElementById(b);if(!b||d?d.hasAttribute('data-clc-stalled')&&c.push('st=1'):c.push('el=0'),0!==c.length)return void F(c.join('&'));var e=r(b),f=e.zone;if(clc.collapse&&clc.collapse[f]&&a.isEmpty)return g(d),void d.setAttribute('data-clc-ready','true');if(-1!==x.dh.indexOf(a.lineItemId))g(d);else if(a.lineItemId&&(d.setAttribute('data-clc-prefilled','true'),'dfp-msb'==b)){var h=document.getElementById('hireme');g(h)}d.setAttribute('data-clc-ready','true')}catch(a){var i=document.querySelector('#dfp-tsb, #dfp-isb, #clc-tsb');i&&i.setAttribute('data-clc-ready','true'),F('e=1')}}function s(a){return!(clc.collapse&&void 0!==clc.collapse[a])||!!clc.collapse[a]}function t(a,b){'dfp-isb'===a&&b.setTargeting('Sidebar',['Inline']),'dfp-tsb'===a&&b.setTargeting('Sidebar',['Right']);var c=r(a),d=c.path,e=c.sizes,f=c.zone,g=googletag.defineSlot(d,e,a);if(s(f)){var h=!x.ll;g.setCollapseEmptyDiv(!0,h)}g.addService(b),!1}function u(b){var c=a.dfp&&a.dfp.targeting||{};'SystemDefault'===c.ProductVariant&&(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?c.ProductVariant='Dark':c.ProductVariant='Light'),Object.keys(c).forEach(function(a){b.setTargeting(a,c[a])})}function v(a){var g=a.map(b).filter(e);return{eligible:g.filter(f).filter(d),ineligible:g.filter(c)}}function w(b){if(void 0===b&&(b=p()),!m())return n(),void googletag.cmd.push(function(){return w(b)});var c=v(b),d=c.eligible,e=c.ineligible;if(e.forEach(g),0!==d.length){x.abd&&o(),googletag.destroySlots();var f=googletag.pubads();x.sf&&(f.setForceSafeFrame(!0),f.setSafeFrameConfig({allowOverlayExpansion:!0,allowPushExpansion:!0,sandbox:!0})),x.ll?f.enableLazyLoad({fetchMarginPercent:50,renderMarginPercent:50}):f.enableSingleRequest(),a.sreEvent||(f.addEventListener('slotRenderEnded',q),a.sreEvent=!0),u(f),d.forEach(function(a){t(a.id,f),a.setAttribute('data-dfp-zone','true')}),googletag.enableServices(),d.forEach(function(a){googletag.display(a.id)})}}var x=function(a){for(var b=[],c=1;c<arguments.length;c++)b[c-1]=arguments[c];for(var d,e=0,f=b;e<f.length;e++)for(var g in d=f[e],d)a[g]=d[g];return a}({"lib":"https://cdn.sstatic.net/clc/clc.min.js?v=d86ede4e666e","style":"https://cdn.sstatic.net/clc/styles/clc.min.css?v=c4f5b80d56c6","u":"https://clc.stackoverflow.com/markup.js","wa":true,"kt":2000,"tto":true,"h":"clc.stackoverflow.com","allowed":"^(((talent\\.)?stackoverflow)|(blog\\.codinghorror)|(serverfault|askubuntu)|([^\\.]+\\.stackexchange))\\.com$","wv":true,"al":false,"dh":[5171832659],"abd":true},a.options||{}),y=h(function(){var a=x.lib;l()&&(a=a.replace(/(\.min)?\.js(\?v=[0-9a-fA-F]+)?$/,'.ie$1.js$2')),i(a)}),z=a.cmd||[];Array.isArray(z)&&(0<z.length?y():k(z,y));var A=h(function(){i('https://www.googletagservices.com/tag/js/gpt.js')}),B='248424177',C=/^\/tags\//.test(location.pathname)||/^\/questions\/tagged\//.test(location.pathname)?'tag-pages':/^\/$/.test(location.pathname)||/^\/home/.test(location.pathname)?'home-page':'question-pages',D=location.hostname;var E={slots:{lb:[[728,90]],mlb:[[728,90]],smlb:[[728,90]],bmlb:[[728,90]],sb:function(a){return'dfp-tsb'===a?[[300,250],[300,600]]:[[300,250]]},"tag-sponsorship":[[730,135]],"mobile-below-question":[[320,50],[300,250]],msb:[[300,250],[300,600]]},ids:{"dfp-tlb":'lb',"dfp-mlb":'mlb',"dfp-smlb":'smlb',"dfp-bmlb":'bmlb',"dfp-tsb":'sb',"dfp-isb":'sb',"dfp-tag":'tag-sponsorship',"dfp-msb":'msb',"dfp-m-aq":'mobile-below-question',"clc-tlb":'lb',"clc-mlb":'mlb',"clc-tsb":'sb'}},F=function(a){new Image().src='https://'+x.h+'/stalled.gif?'+a};(function(){var b=x.al;b&&z.push(function(){return a.load()})})(),n(),a.dfp={load:w},a.options=x,a.cmd=z})(this.clc=this.clc||{})}catch(a){window.console.error(a)}</script>    <script>
+        var clc = clc || {};
+        clc.collapse = { sb: !0, 'tag-sponsorship': !0, lb:!0, mlb:!0, smlb:!0, bmlb:!0, 'mobile-below-question':!0};
+        clc.options = clc.options || {};
+        clc.options.sf = !0;
+        clc.options.hb = !1;
+        clc.options.ll = !1;
+        clc.cmd = clc.cmd || [];
+        clc.cmd.push(function () { window.clc_request='Alsee7q02NcIAAAAAMbAcAACAAAAAgAAAAAjAAAAfGRhdGFiYXNlfGRpc3RyaWJ1dGVkLXRyYW5zYWN0aW9uc3wAdXoWfakzdOHk2Q'; clc.load(); });
+        clc.dfp = clc.dfp || {};
+        clc.dfp.targeting = {Registered:['false'],'so-tag':['database','distributed-transactions'],'tag-reportable':['database','distributed-transactions'],'tag-non-reportable':['database','distributed-transactions'],NumberOfAnswers:['3']};
+        var googletag = googletag || {};
+        googletag.cmd = googletag.cmd || [];
+        googletag.cmd.push(function () { clc.dfp.load(); });
+
+    </script><script src="Filer_for_database%20-%20Two%20phase%20commit%20-%20Stack%20Overflow/clc.js"></script><script src="Filer_for_database%20-%20Two%20phase%20commit%20-%20Stack%20Overflow/gpt.js"></script>
+
+            <footer id="footer" class="site-footer js-footer" role="contentinfo">
+        <div class="site-footer--container">
+                <div class="site-footer--logo">
+                    
+                    <a href="https://stackoverflow.com/"><svg aria-hidden="true" class="svg-icon native iconLogoGlyphMd" width="32" height="37" viewBox="0 0 32 37"><path d="M26 33v-9h4v13H0V24h4v9h22z" fill="#BCBBBB"></path><path d="M21.5 0l-2.7 2 9.9 13.3 2.7-2L21.5 0zM26 18.4L13.3 7.8l2.1-2.5 12.7 10.6-2.1 2.5zM9.1 15.2l15 7 1.4-3-15-7-1.4 3zm14 10.79l.68-2.95-16.1-3.35L7 23l16.1 2.99zM23 30H7v-3h16v3z" fill="#F48024"></path></svg></a>
+                </div>
+            <nav class="site-footer--nav">
+                    <div class="site-footer--col site-footer--col__visible js-footer-col" data-name="default">
+                        <h5 class="-title"><a href="https://stackoverflow.com/" class="js-gps-track" data-gps-track="footer.click({ location: 2, link: 15})">Stack Overflow</a></h5>
+                        <ul class="-list js-primary-footer-links">
+                            <li class="-item"><a href="https://stackoverflow.com/questions" class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 16})">Questions</a></li>
+                                <li class="-item"><a href="https://stackoverflow.com/jobs" class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 17})">Jobs</a></li>
+                                <li class="-item"><a href="https://stackoverflow.com/jobs/directory/developer-jobs" class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 11})">Developer Jobs Directory</a></li>
+                                     <li class="-item"><a href="https://stackoverflow.com/jobs/salary" class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 28})">Salary Calculator</a></li>
+                                <li class="-item"><a href="https://stackoverflow.com/help" class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 3 })">Help</a></li>
+                                <li class="-item"><a onclick='StackExchange.switchMobile("on")' class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 12 })">Mobile</a></li>
+                        <li class="-item"><a class="-link" role="button">Disable Responsiveness</a></li></ul>
+                    </div>
+                    <div class="site-footer--col site-footer--col__visible js-footer-col" data-name="default">
+                        <h5 class="-title"><a href="https://stackoverflowbusiness.com/" class="js-gps-track" data-gps-track="footer.click({ location: 2, link: 19 })">Products</a></h5>
+                        <ul class="-list">
+                            <li class="-item"><a href="https://stackoverflow.com/teams" class="js-gps-track -link" data-ga="[&quot;teams traffic&quot;,&quot;footer - site nav&quot;,&quot;stackoverflow.com/teams&quot;,null,{&quot;dimension4&quot;:&quot;teams&quot;}]" data-gps-track="footer.click({ location: 2, link: 29 })">Teams</a></li>
+                            <li class="-item"><a href="https://stackoverflow.com/talent" class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 20 })">Talent</a></li>
+                            <li class="-item"><a href="https://stackoverflow.com/advertising" class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 21 })">Advertising</a></li>
+                            <li class="-item"><a href="https://stackoverflow.com/enterprise" class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 22 })">Enterprise</a></li>
+                        </ul>
+                    </div>
+                <div class="site-footer--col site-footer--col__visible js-footer-col" data-name="default">
+                    <h5 class="-title"><a class="js-gps-track" data-gps-track="footer.click({ location: 2, link: 1 })" href="https://stackoverflow.com/company/about">Company</a></h5>
+                    <ul class="-list">
+                            <li class="-item"><a class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 1 })" href="https://stackoverflow.com/company/about">About</a></li>
+                        <li class="-item"><a class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 27 })" href="https://stackoverflow.com/company/press">Press</a></li>
+                            <li class="-item"><a class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 9 })" href="https://stackoverflow.com/company/work-here">Work Here</a></li>
+                        <li class="-item"><a class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 7 })" href="https://stackoverflow.com/legal">Legal</a></li>
+                        <li class="-item"><a class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 8 })" href="https://stackoverflow.com/legal/privacy-policy">Privacy Policy</a></li>
+                            <li class="-item"><a class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 13 })" href="https://stackoverflow.com/company/contact">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="site-footer--col site-footer--categories-nav site-footer--col__visible">
+                    <a href="#" class="site-footer--back js-footer-back"><svg aria-hidden="true" class="svg-icon iconArrowLeftAlt" width="18" height="18" viewBox="0 0 18 18"><path d="M10.58 16L12 14.59 6.4 9 12 3.41 10.57 2l-7 7 7 7z"></path></svg></a>
+                    <div>
+                        <h5 class="-title"><a href="https://stackexchange.com/" data-gps-track="footer.click({ location: 2, link: 30 })">Stack Exchange<br> Network</a></h5>
+                        <ul class="-list">
+                            <li class="-item"><a href="#" class="-link _expandable js-footer-category-trigger js-gps-track" data-gps-track="footer.click({ location: 2, link: 24 })" data-target="Technology">Technology</a></li>
+                            <li class="-item"><a href="#" class="-link _expandable js-footer-category-trigger js-gps-track" data-gps-track="footer.click({ location: 2, link: 24 })" data-target="Life / Arts">Life / Arts</a></li>
+                            <li class="-item"><a href="#" class="-link _expandable js-footer-category-trigger js-gps-track" data-gps-track="footer.click({ location: 2, link: 24 })" data-target="Culture / Recreation">Culture / Recreation</a></li>
+                            <li class="-item"><a href="#" class="-link _expandable js-footer-category-trigger js-gps-track" data-gps-track="footer.click({ location: 2, link: 24 })" data-target="Science">Science</a></li>
+                            <li class="-item"><a href="#" class="-link _expandable js-footer-category-trigger js-gps-track" data-gps-track="footer.click({ location: 2, link: 24 })" data-target="Other">Other</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="site-footer--categories">
+                        <div class="site-footer--col site-footer--category js-footer-col" data-name="Technology">
+        <ul class="-list">
+                <li class="-item"><a href="https://stackoverflow.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="professional and enthusiast programmers">Stack Overflow</a></li>
+                <li class="-item"><a href="https://serverfault.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="system and network administrators">Server Fault</a></li>
+                <li class="-item"><a href="https://superuser.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="computer enthusiasts and power users">Super User</a></li>
+                <li class="-item"><a href="https://webapps.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="power users of web applications">Web Applications</a></li>
+                <li class="-item"><a href="https://askubuntu.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="Ubuntu users and developers">Ask Ubuntu</a></li>
+                <li class="-item"><a href="https://webmasters.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="pro webmasters">Webmasters</a></li>
+                <li class="-item"><a href="https://gamedev.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="professional and independent game developers">Game Development</a></li>
+                    </ul></div><div class="site-footer--col site-footer--category js-footer-col" data-name="Technology"><ul class="-list">
+                <li class="-item"><a href="https://tex.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="users of TeX, LaTeX, ConTeXt, and related typesetting systems">TeX - LaTeX</a></li>
+                <li class="-item"><a href="https://softwareengineering.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="professionals, academics, and students working within the systems development life cycle">Software Engineering</a></li>
+                <li class="-item"><a href="https://unix.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="users of Linux, FreeBSD and other Un*x-like operating systems">Unix &amp; Linux</a></li>
+                <li class="-item"><a href="https://apple.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="power users of Apple hardware and software">Ask Different (Apple)</a></li>
+                <li class="-item"><a href="https://wordpress.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="WordPress developers and administrators">WordPress Development</a></li>
+                <li class="-item"><a href="https://gis.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="cartographers, geographers and GIS professionals">Geographic Information Systems</a></li>
+                <li class="-item"><a href="https://electronics.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="electronics and electrical engineering professionals, students, and enthusiasts">Electrical Engineering</a></li>
+                    </ul></div><div class="site-footer--col site-footer--category js-footer-col" data-name="Technology"><ul class="-list">
+                <li class="-item"><a href="https://android.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="enthusiasts and power users of the Android operating system">Android Enthusiasts</a></li>
+                <li class="-item"><a href="https://security.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="information security professionals">Information Security</a></li>
+                <li class="-item"><a href="https://dba.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="database professionals who wish to improve their database skills and learn from others in the community">Database Administrators</a></li>
+                <li class="-item"><a href="https://drupal.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="Drupal developers and administrators">Drupal Answers</a></li>
+                <li class="-item"><a href="https://sharepoint.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="SharePoint enthusiasts">SharePoint</a></li>
+                <li class="-item"><a href="https://ux.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="user experience researchers and experts">User Experience</a></li>
+                <li class="-item"><a href="https://mathematica.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="users of Wolfram Mathematica">Mathematica</a></li>
+                    </ul></div><div class="site-footer--col site-footer--category js-footer-col" data-name="Technology"><ul class="-list">
+                <li class="-item"><a href="https://salesforce.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="Salesforce administrators, implementation experts, developers and anybody in-between">Salesforce</a></li>
+                <li class="-item"><a href="https://expressionengine.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="administrators, end users, developers and designers for ExpressionEngine® CMS">ExpressionEngine® Answers</a></li>
+                <li class="-item"><a href="https://pt.stackoverflow.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="programadores profissionais e entusiastas">Stack Overflow em Português</a></li>
+                <li class="-item"><a href="https://blender.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="people who use Blender to create 3D graphics, animations, or games">Blender</a></li>
+                <li class="-item"><a href="https://networkengineering.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="network engineers">Network Engineering</a></li>
+                <li class="-item"><a href="https://crypto.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="software developers, mathematicians and others interested in cryptography">Cryptography</a></li>
+                <li class="-item"><a href="https://codereview.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="peer programmer code reviews">Code Review</a></li>
+                    </ul></div><div class="site-footer--col site-footer--category js-footer-col" data-name="Technology"><ul class="-list">
+                <li class="-item"><a href="https://magento.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="users of the Magento e-Commerce platform">Magento</a></li>
+                <li class="-item"><a href="https://softwarerecs.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="people seeking specific software recommendations">Software Recommendations</a></li>
+                <li class="-item"><a href="https://dsp.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="practitioners of the art and science of signal, image and video processing">Signal Processing</a></li>
+                <li class="-item"><a href="https://emacs.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="those using, extending or developing Emacs">Emacs</a></li>
+                <li class="-item"><a href="https://raspberrypi.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="users and developers of hardware and software for Raspberry Pi">Raspberry Pi</a></li>
+                <li class="-item"><a href="https://ru.stackoverflow.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="программистов">Stack Overflow на русском</a></li>
+                <li class="-item"><a href="https://codegolf.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="programming puzzle enthusiasts and code golfers">Code Golf</a></li>
+                    </ul></div><div class="site-footer--col site-footer--category js-footer-col" data-name="Technology"><ul class="-list">
+                <li class="-item"><a href="https://es.stackoverflow.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="programadores y profesionales de la informática">Stack Overflow en español</a></li>
+                <li class="-item"><a href="https://ethereum.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="users of Ethereum, the decentralized application platform and smart contract enabled blockchain">Ethereum</a></li>
+                <li class="-item"><a href="https://datascience.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="Data science professionals, Machine Learning specialists, and those interested in learning more about the field">Data Science</a></li>
+                <li class="-item"><a href="https://arduino.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="developers of open-source hardware and software that is compatible with Arduino">Arduino</a></li>
+                <li class="-item"><a href="https://bitcoin.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="Bitcoin crypto-currency enthusiasts">Bitcoin</a></li>
+                <li class="-item"><a href="https://sqa.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="software quality control experts, automation engineers, and software testers">Software Quality Assurance &amp; Testing</a></li>
+                <li class="-item"><a href="https://sound.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="sound engineers, producers, editors, and enthusiasts">Sound Design</a></li>
+                    </ul></div><div class="site-footer--col site-footer--category js-footer-col" data-name="Technology"><ul class="-list">
+                <li class="-item"><a href="https://windowsphone.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="enthusiasts and power users of Windows Phone OS">Windows Phone</a></li>
+                <li class="-item">
+                    <a href="https://stackexchange.com/sites#technology" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 26 })">
+                        <strong>
+                            more (27)
+                        </strong>
+                    </a>
+                </li>
+        </ul>
+    </div>
+    <div class="site-footer--col site-footer--category js-footer-col" data-name="Life / Arts">
+        <ul class="-list">
+                <li class="-item"><a href="https://photo.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="professional, enthusiast and amateur photographers">Photography</a></li>
+                <li class="-item"><a href="https://scifi.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="science fiction and fantasy enthusiasts">Science Fiction &amp; Fantasy</a></li>
+                <li class="-item"><a href="https://graphicdesign.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="Graphic Design professionals, students, and enthusiasts">Graphic Design</a></li>
+                <li class="-item"><a href="https://movies.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="movie and tv enthusiasts">Movies &amp; TV</a></li>
+                <li class="-item"><a href="https://music.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="musicians, students, and enthusiasts">Music: Practice &amp; Theory</a></li>
+                <li class="-item"><a href="https://worldbuilding.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="writers/artists using science, geography and culture to construct imaginary worlds and settings">Worldbuilding</a></li>
+                <li class="-item"><a href="https://video.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="engineers, producers, editors, and enthusiasts spanning the fields of video, and media creation">Video Production</a></li>
+                    </ul></div><div class="site-footer--col site-footer--category js-footer-col" data-name="Life / Arts"><ul class="-list">
+                <li class="-item"><a href="https://cooking.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="professional and amateur chefs">Seasoned Advice (cooking)</a></li>
+                <li class="-item"><a href="https://diy.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="contractors and serious DIYers">Home Improvement</a></li>
+                <li class="-item"><a href="https://money.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="people who want to be financially literate">Personal Finance &amp; Money</a></li>
+                <li class="-item"><a href="https://academia.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="academics and those enrolled in higher education">Academia</a></li>
+                <li class="-item"><a href="https://law.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="legal professionals, students, and others with experience or interest in law">Law</a></li>
+                <li class="-item"><a href="https://fitness.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="physical fitness professionals, athletes, trainers, and those providing health-related needs">Physical Fitness</a></li>
+                <li class="-item"><a href="https://gardening.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="gardeners and landscapers">Gardening &amp; Landscaping</a></li>
+                    </ul></div><div class="site-footer--col site-footer--category js-footer-col" data-name="Life / Arts"><ul class="-list">
+                <li class="-item"><a href="https://parenting.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="parents, grandparents, nannies and others with a parenting role">Parenting</a></li>
+                <li class="-item">
+                    <a href="https://stackexchange.com/sites#lifearts" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 26 })">
+                        <strong>
+                            more (11)
+                        </strong>
+                    </a>
+                </li>
+        </ul>
+    </div>
+    <div class="site-footer--col site-footer--category js-footer-col" data-name="Culture / Recreation">
+        <ul class="-list">
+                <li class="-item"><a href="https://english.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="linguists, etymologists, and serious English language enthusiasts">English Language &amp; Usage</a></li>
+                <li class="-item"><a href="https://skeptics.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="scientific skepticism">Skeptics</a></li>
+                <li class="-item"><a href="https://judaism.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="those who base their lives on Jewish law and tradition and anyone interested in learning more">Mi Yodeya (Judaism)</a></li>
+                <li class="-item"><a href="https://travel.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="road warriors and seasoned travelers">Travel</a></li>
+                <li class="-item"><a href="https://christianity.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="committed Christians, experts in Christianity and those interested in learning more">Christianity</a></li>
+                <li class="-item"><a href="https://ell.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="speakers of other languages learning English">English Language Learners</a></li>
+                <li class="-item"><a href="https://japanese.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="students, teachers, and linguists wanting to discuss the finer points of the Japanese language">Japanese Language</a></li>
+                    </ul></div><div class="site-footer--col site-footer--category js-footer-col" data-name="Culture / Recreation"><ul class="-list">
+                <li class="-item"><a href="https://chinese.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="students, teachers, and linguists wanting to discuss the finer points of the Chinese language">Chinese Language</a></li>
+                <li class="-item"><a href="https://french.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="students, teachers, and linguists wanting to discuss the finer points of the French language">French Language</a></li>
+                <li class="-item"><a href="https://german.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="speakers of German wanting to discuss the finer points of the language and translation">German Language</a></li>
+                <li class="-item"><a href="https://hermeneutics.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="professors, theologians, and those interested in exegetical analysis of biblical texts">Biblical Hermeneutics</a></li>
+                <li class="-item"><a href="https://history.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="historians and history buffs">History</a></li>
+                <li class="-item"><a href="https://spanish.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="linguists, teachers, students and Spanish language enthusiasts in general wanting to discuss the finer points of the language">Spanish Language</a></li>
+                <li class="-item"><a href="https://islam.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="Muslims, experts in Islam, and those interested in learning more about Islam">Islam</a></li>
+                    </ul></div><div class="site-footer--col site-footer--category js-footer-col" data-name="Culture / Recreation"><ul class="-list">
+                <li class="-item"><a href="https://rus.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="лингвистов и энтузиастов русского языка">Русский язык</a></li>
+                <li class="-item"><a href="https://russian.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="students, teachers, and linguists wanting to discuss the finer points of the Russian language">Russian Language</a></li>
+                <li class="-item"><a href="https://gaming.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="passionate videogamers on all platforms">Arqade (gaming)</a></li>
+                <li class="-item"><a href="https://bicycles.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="people who build and repair bicycles, people who train cycling, or commute on bicycles">Bicycles</a></li>
+                <li class="-item"><a href="https://rpg.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="gamemasters and players of tabletop, paper-and-pencil role-playing games">Role-playing Games</a></li>
+                <li class="-item"><a href="https://anime.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="anime and manga fans">Anime &amp; Manga</a></li>
+                <li class="-item"><a href="https://puzzling.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="those who create, solve, and study puzzles">Puzzling</a></li>
+                    </ul></div><div class="site-footer--col site-footer--category js-footer-col" data-name="Culture / Recreation"><ul class="-list">
+                <li class="-item"><a href="https://mechanics.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="mechanics and DIY enthusiast owners of cars, trucks, and motorcycles">Motor Vehicle Maintenance &amp; Repair</a></li>
+                <li class="-item"><a href="https://boardgames.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="people who like playing board games, designing board games or modifying the rules of existing board games">Board &amp; Card Games</a></li>
+                <li class="-item"><a href="https://bricks.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="LEGO® and building block enthusiasts">Bricks</a></li>
+                <li class="-item"><a href="https://homebrew.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="dedicated home brewers and serious enthusiasts">Homebrewing</a></li>
+                <li class="-item"><a href="https://martialarts.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="students and teachers of all martial arts">Martial Arts</a></li>
+                <li class="-item"><a href="https://outdoors.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="people who love being outdoors enjoying nature and wilderness, and learning about the required skills and equipment">The Great Outdoors</a></li>
+                <li class="-item"><a href="https://poker.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="serious players and enthusiasts of poker">Poker</a></li>
+                    </ul></div><div class="site-footer--col site-footer--category js-footer-col" data-name="Culture / Recreation"><ul class="-list">
+                <li class="-item"><a href="https://chess.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="serious players and enthusiasts of chess">Chess</a></li>
+                <li class="-item"><a href="https://sports.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="participants in team and individual sport activities">Sports</a></li>
+                <li class="-item">
+                    <a href="https://stackexchange.com/sites#culturerecreation" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 26 })">
+                        <strong>
+                            more (16)
+                        </strong>
+                    </a>
+                </li>
+        </ul>
+    </div>
+    <div class="site-footer--col site-footer--category js-footer-col" data-name="Science">
+        <ul class="-list">
+                <li class="-item"><a href="https://mathoverflow.net/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="professional mathematicians">MathOverflow</a></li>
+                <li class="-item"><a href="https://math.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="people studying math at any level and professionals in related fields">Mathematics</a></li>
+                <li class="-item"><a href="https://stats.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="people interested in statistics, machine learning, data analysis, data mining, and data visualization">Cross Validated (stats)</a></li>
+                <li class="-item"><a href="https://cstheory.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="theoretical computer scientists and researchers in related fields">Theoretical Computer Science</a></li>
+                <li class="-item"><a href="https://physics.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="active researchers, academics and students of physics">Physics</a></li>
+                <li class="-item"><a href="https://chemistry.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="scientists, academics, teachers, and students in the field of chemistry">Chemistry</a></li>
+                <li class="-item"><a href="https://biology.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="biology researchers, academics, and students">Biology</a></li>
+                    </ul></div><div class="site-footer--col site-footer--category js-footer-col" data-name="Science"><ul class="-list">
+                <li class="-item"><a href="https://cs.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="students, researchers and practitioners of computer science">Computer Science</a></li>
+                <li class="-item"><a href="https://philosophy.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="those interested in the study of the fundamental nature of knowledge, reality, and existence">Philosophy</a></li>
+                <li class="-item"><a href="https://linguistics.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="professional linguists and others with an interest in linguistic research and theory">Linguistics</a></li>
+                <li class="-item"><a href="https://psychology.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="practitioners, researchers, and students in cognitive science, psychology, neuroscience, and psychiatry">Psychology &amp; Neuroscience</a></li>
+                <li class="-item"><a href="https://scicomp.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="scientists using computers to solve scientific problems">Computational Science</a></li>
+                <li class="-item">
+                    <a href="https://stackexchange.com/sites#science" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 26 })">
+                        <strong>
+                            more (8)
+                        </strong>
+                    </a>
+                </li>
+        </ul>
+    </div>
+    <div class="site-footer--col site-footer--category js-footer-col" data-name="Other">
+        <ul class="-list">
+                <li class="-item"><a href="https://meta.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="meta-discussion of the Stack Exchange family of Q&amp;A websites">Meta Stack Exchange</a></li>
+                <li class="-item"><a href="https://stackapps.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="apps, scripts, and development with the Stack Exchange API">Stack Apps</a></li>
+                <li class="-item"><a href="https://api.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="programmatic interaction with Stack Exchange sites">API</a></li>
+                <li class="-item"><a href="https://data.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="querying Stack Exchange data using SQL">Data</a></li>
+        </ul>
+    </div>
+
+                </div>
+            </nav>
+            <div class="site-footer--copyright fs-fine">
+                <ul class="-list">
+                    <li class="-item"><a class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link:4 })" href="https://stackoverflow.blog/?blb=1">Blog</a></li>
+                    <li class="-item"><a href="https://www.facebook.com/officialstackoverflow/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 31 })">Facebook</a></li>
+                    <li class="-item"><a href="https://twitter.com/stackoverflow" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 32 })">Twitter</a></li>
+                    <li class="-item"><a href="https://linkedin.com/company/stack-overflow" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 33 })">LinkedIn</a></li>
+                </ul>
+
+                <p class="mt-auto mb24">
+site design / logo © 2020 Stack Exchange Inc; user contributions licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" class="js-gps-track" data-gps-track="footer.click({ location: 2, link: 34 })" rel="license">cc by-sa 4.0</a>
+                            with <a href="https://stackoverflow.blog/2009/06/25/attribution-required/" class="js-gps-track" data-gps-track="footer.click({ location: 2, link:35 })" rel="license">attribution required</a>.                    <span id="svnrev">rev&nbsp;2020.4.3.36511</span>
+                </p>
+            </div>
+        </div>
+
+    </footer>
+
+            <script>StackExchange.ready(function () { StackExchange.responsiveness.addSwitcher(); })</script>
+    <noscript>
+        <div id="noscript-warning">Stack Overflow works best with JavaScript enabled
+            <img src="https://pixel.quantserve.com/pixel/p-c1rF4kxgLUzNc.gif" alt="" class="dno">
+        </div>
+    </noscript>
+
+        <script>
+(function(i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function() { (i[r].q = i[r].q || []).push(arguments) }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            StackExchange.ready(function () {
+
+                StackExchange.ga.init({
+                    sendTitles: true,
+                    tracker: window.ga,
+                    trackingCodes: [
+                        'UA-108242619-1'
+                    ],
+                        checkDimension: 'dimension42'
+                });
+
+
+
+                    StackExchange.ga.setDimension('dimension2', '|database|distributed-transactions|');
+
+                    StackExchange.ga.setDimension('dimension3', 'Questions/Show');
+
+
+                StackExchange.ga.trackPageView();
+            });
+            /**/
+
+            var _qevents = _qevents || [],
+            _comscore = _comscore || [];
+            (function() {
+                var ssl = 'https:' == document.location.protocol,
+                    s = document.getElementsByTagName('script')[0],
+                    qc = document.createElement('script');
+ qc.async = true;
+                    qc.src = (ssl ? 'https://secure' : 'http://edge') + '.quantserve.com/quant.js';
+                    s.parentNode.insertBefore(qc, s);
+                    _qevents.push({ qacct: "p-c1rF4kxgLUzNc" });/**/
+ var sc = document.createElement('script');
+                    sc.async = true;
+                    sc.src = (ssl ? 'https://sb' : 'http://b') + '.scorecardresearch.com/beacon.js';
+                    s.parentNode.insertBefore(sc, s);
+                    _comscore.push({ c1: "2", c2: "17440561" });            })();
+            
+</script>
+
+    
+    
+    
+<div class="adsbox" id="clc-abd" style="position: absolute; pointer-events: none;">&nbsp;</div><script src="Filer_for_database%20-%20Two%20phase%20commit%20-%20Stack%20Overflow/markup.js"></script></body></html>
