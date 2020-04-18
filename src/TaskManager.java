@@ -1,46 +1,38 @@
-public class TaskManager {
-    private ArrayList<ResourceManager> resourceManagers = new ArrayList();
+import java.awt.*;
 
-    public TaskManager() {
-        // Check if there is any stored request locally
-        // If yes, jump to step
-        // If not, wait for incoming requests
+public class TaskManager extends Client {
+    String A_HOST;
+    int A_PORT;
+    String B_HOST;
+    int B_PORT;
+
+    public TaskManager(int PORT, String A_HOST, int A_PORT, String B_HOST, int B_PORT){
+        super(PORT);
+        this.A_HOST = A_HOST;
+        this.A_PORT = A_PORT;
+        this.B_HOST = B_HOST;
+        this.B_PORT = B_PORT;
+        // Check if there is anything saved
     }
+    @Override
+    void handleMessage(Message msg) {
+        switch (msg.getMessage()){
+            case TRANSACTION:
+                // Incoming transaction that should be distributed.
+                startTransaction();
+                break;
+            default:
+                break;
 
-    private void addResourceManager() {
-        // Add RM to arraylist
-    }
-
-    private void handleRequest(Request request) {
-        // Step 1
-        // Record request and status in case of failure
-        boolean saved = saveRequest(request);
-        if (!saved) {
-            // Throw error
         }
-        // Step 2
-        // Send request to all rm's
-
-        // Step 3
-        // Voting round
-
-        // Step 4
-        // Committing or aborting
-
-        // Step 5
-        // If committing - Send commit request
-
-        // Step 6
-        // Wait for all rm's to report back that they have committed
-
-        // Step 7
-        // Wait for all rm's to report back that they have deleted the request
-        // Do I need this. Can i just have a flag in the request?
-
-        // Step 8
-        // Delete local information about the request
     }
-    private boolean saveRequest(Request request) {
-        // Save request to file.
+    private void startTransaction() {
+        Message startA = new Message(1, "A", messageTypes.START);
+        sendMessage(A_HOST, A_PORT, startA);
+        Message startB = new Message(1, "B", messageTypes.START);
+        sendMessage(B_HOST, B_PORT, startB);
+    }
+    public static void main(String[] args) {
+        TaskManager tm = new TaskManager(9000, "localhost", 9001, "localhost", 9002);
     }
 }

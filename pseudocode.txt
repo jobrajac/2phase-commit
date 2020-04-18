@@ -1,5 +1,5 @@
 Classes:
-TaskManager - TM
+TaskManager_Old - TM
 ResourceManager A and B
 
 Two-phase commit does not guarantee that a distributed transaction can't fail, but it does guarantee that it can't fail without the TM being aware of it.
