@@ -21,7 +21,6 @@ public class WSServer implements Runnable{
                 while (true) {
                     // Create socket for client
                     Socket clientSocket = serversocket.accept();
-                    System.out.println("Socket established.");
                     // Create input and output streams to client
                     ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream());
 

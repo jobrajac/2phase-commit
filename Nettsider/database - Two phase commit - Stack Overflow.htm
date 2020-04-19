@@ -720,7 +720,7 @@ commit.<sup>1</sup>  </p>
 <p>In practice, if B can no longer commit the transaction, it would 
 imply that the disaster that took B out had caused data loss, and B 
 would report an error when the TM asked it to commit a TxID that it 
-wasn't aware of or didn't think was in a commitable state.</p>
+wasn't aware of or didn't think was in a commitable saved_state.</p>
 
 <p>Thus, two phase commit does not prevent a catastrophic failure from 
 occuring, but it does prevent the failure from going unnoticed.  In this
@@ -729,7 +729,7 @@ application if B cannot commit.  </p>
 
 <p>The application still has to be able to recover from the error, but 
 the transaction cannot fail silently without the application being made 
-aware of the inconsistent state.</p>
+aware of the inconsistent saved_state.</p>
 
 <p><strong>Semantics</strong></p>
 
@@ -753,7 +753,7 @@ the error and can either re-try or initiate the abort itself.</p></li>
 the TM comes back up.  It has already reported the transaction as
 committable and no fatal error should be presented to the client,
 although it may block until the TM comes back up.  The TM will still
-have the transaction in an uncommitted state and will poll the RMs
+have the transaction in an uncommitted saved_state and will poll the RMs
 to commit when it comes back up.</p></li>
 </ul>
 
@@ -998,13 +998,13 @@ The idea is very simple. We break the second phase of 2PC – ‘commit’ –
 into two sub-phases. The first is the ‘prepare to commit’ phase. The 
 co-ordinator sends this message to all replicas when it has received 
 unanimous ‘yes’ votes in the first phase. On receipt of this messages, 
-replicas get into a state where they are able to commit the transaction –
+replicas get into a saved_state where they are able to commit the transaction –
  by taking necessary locks and so forth – but crucially do not do any 
 work that they cannot later undo. They then reply to the co-ordinator 
 telling it that the ‘prepare to commit’ message was received.</p>
 
 <p>The purpose of this phase is to communicate the result of the vote to
- every replica so that the state of the protocol can be recovered no 
+ every replica so that the saved_state of the protocol can be recovered no
 matter which replica dies.</p>
 
 <p>The last phase of the protocol does almost exactly the same thing as 
@@ -1012,13 +1012,13 @@ the original ‘commit or abort’ phase in 2PC. If the co-ordinator
 receives confirmation of the delivery of the ‘prepare to commit’ message
  from all replicas, it is then safe to go ahead with committing the 
 transaction. However, if delivery is not confirmed, the co-ordinator 
-cannot guarantee that the protocol state will be recovered should it 
+cannot guarantee that the protocol saved_state will be recovered should it
 crash (if you are tolerating a fixed number f of failures, the 
 co-ordinator can go ahead once it has received f+1 confirmations). In 
 this case, the co-ordinator will abort the transaction.</p>
 
 <p>If the co-ordinator should crash at any point, a recovery node can 
-take over the transaction and query the state from any remaining 
+take over the transaction and query the saved_state from any remaining
 replicas. If a replica that has committed the transaction has crashed, 
 we know that every other replica has received a ‘prepare to commit’ 
 message (otherwise the co-ordinator wouldn’t have moved to the commit 
@@ -1036,7 +1036,7 @@ that all the replicas that received ‘prepare to commit’ are on one side
 of the partition, and those that did not are on the other. Then both 
 partitions will continue with recovery nodes that respectively commit or
  abort the transaction, and when the network merges the system will have
- an inconsistent state. So 3PC has potentially unsafe runs, as does 2PC,
+ an inconsistent saved_state. So 3PC has potentially unsafe runs, as does 2PC,
  but will always make progress and therefore satisfies its liveness 
 properties. The fact that 3PC will not block on single node failures 
 makes it much more appealing for services where high availability is 

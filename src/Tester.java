@@ -5,10 +5,10 @@ public class Tester {
     public static void main(String[] args) {
         try {
             // Create the socket
-            Socket clientSocket = new Socket("localhost", 9000);
+            Socket clientSocket = new Socket(Participant.TM.getHost(), Participant.TM.getPort());
             // Create the input & output streams to the server
             ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-            Message send = new Message(1, "Outside", messageTypes.TRANSACTION);
+            Message send = new Message(1, Participant.OUTSIDE, messageTypes.TRANSACTION);
             outputStream.writeObject(send);
             outputStream.flush();
             outputStream.close();
