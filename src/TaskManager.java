@@ -69,6 +69,8 @@ public class TaskManager extends Client {
 
         }
     }
+
+
     private void transaction() {
         System.out.println("Transaction received.");
         if(getSaved_state() == null) {
@@ -80,8 +82,7 @@ public class TaskManager extends Client {
             }
             TM_State new_trans = new TM_State(1, states);
             setSaved_state(new_trans);
-            setState(Participant.TM, 1.0);
-            // Incoming transaction that should be distributed.
+
             for (Participant resourceManager : resourceManagers) {
                 start(resourceManager, getSaved_state().getTransaction_id());
             }
@@ -90,13 +91,15 @@ public class TaskManager extends Client {
             // Should be added to queue, but will not be implemented in this program.
             // TODO throw error
         }
-
     }
+
     private void start(Participant who, int trans_id) {
         Message start = new Message(trans_id, who, messageTypes.START);
         send(who, start);
         setState(who, 0.1);
     }
+
+
     private void startOk(Message msg) {
         Participant who = msg.getClient_id();
         if(getSaved_state().getState(who.name()) == 0.1) {
@@ -116,6 +119,8 @@ public class TaskManager extends Client {
             commit(resourceManager, getSaved_state().getTransaction_id());
         }
     }
+
+
     private void startFail(Message msg) {
         // Update TM to state 2.0 - rollback
         setState(Participant.TM, 2.0);
@@ -138,14 +143,19 @@ public class TaskManager extends Client {
             }
         }
         // Alle har rullet tilbake eller rapportert feil på start.
+        setState(Participant.TM, 4);
         transactionComplete(msg);
     }
+
+
     private void commit(Participant who, int trans_id){
         // Send commit.
         Message commit = new Message(trans_id, who, messageTypes.COMMIT);
         send(who, commit);
         setState(who, 1.1);
     }
+
+
     private void commitOk(Message msg) {
         // Hvis transaksjon har feilet, gjør ingenting
         if(!isFailed()) {
@@ -164,6 +174,8 @@ public class TaskManager extends Client {
             transactionComplete(msg);
         }
     }
+
+
     private void commitFail(Message msg) {
         // Update TM to state 3.0 - undo
         // TODO log error
@@ -189,12 +201,16 @@ public class TaskManager extends Client {
         // Alle har undoet eller rapportert feil på commit.
         transactionComplete(msg);
     }
+
+
     private void rollback(Participant who, int trans_id) {
         // Send rollback.
         Message rollback = new Message(trans_id, who, messageTypes.ROLLBACK);
         send(who, rollback);
         setState(who, 2.1);
     }
+
+
     private void rollbackOK(Message msg) {
         Participant who = msg.getClient_id();
         // TODO trenger jeg denne sjekken her?
@@ -212,6 +228,8 @@ public class TaskManager extends Client {
         // TODO loggfør rollback.
         transactionComplete(msg);
     }
+
+
     private void rollbackFail(Message msg) {
         Participant who = msg.getClient_id();
         // TODO trenger jeg denne sjekken her?
@@ -229,12 +247,16 @@ public class TaskManager extends Client {
         // TODO loggfør rollback FAIL!.
         transactionComplete(msg);
     }
+
+
     private void undo(Participant who, int trans_id){
         // Send undo.
         Message undo = new Message(trans_id, who, messageTypes.UNDO);
         send(who, undo);
         setState(who, 3.1);
     }
+
+
     void undoOk(Message msg) {
         Participant who = msg.getClient_id();
         // TODO trenger jeg denne sjekken her?
@@ -253,6 +275,8 @@ public class TaskManager extends Client {
         // TODO loggfør undo.
         transactionComplete(msg);
     }
+
+
     void undoFail(Message msg) {
         Participant who = msg.getClient_id();
         // TODO trenger jeg denne sjekken her?
@@ -271,6 +295,8 @@ public class TaskManager extends Client {
         // TODO loggfør rollback FAIL!.
         transactionComplete(msg);
     }
+
+
     private void transactionComplete(Message msg) {
         if(isFailed()) {
             // Rapporter
@@ -281,15 +307,21 @@ public class TaskManager extends Client {
             System.out.println("Transaction complete");
         }
     }
+
+
     private void saveState() {
         saveFile(getSaved_state(), "saved_states/tm/" + getSaved_state().getTransaction_id() + ".ser");
     }
+
+
     private void setState(Participant who, double newStep) {
         TM_State tmp = getSaved_state();
         tmp.setState(who.name(), newStep);
         setSaved_state(tmp);
         saveState();
     }
+
+
     private void send(Participant who, Message message) {
         // Try catch this
         sendMessage(who.getHost(), who.getPort(), message);

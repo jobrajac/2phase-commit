@@ -6,18 +6,18 @@ import java.util.Queue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-abstract class Client implements Runnable{
+abstract class Client implements Runnable {
     private Queue<Message> messageQueue = new LinkedList<>();
     private final Lock queueLock = new ReentrantLock();
-    private final Thread listener;
 
     Client(int PORT) {
         WSServer server = new WSServer(PORT, messageQueue, queueLock);
-        listener = new Thread(server);
+        Thread listener = new Thread(server);
         listener.start();
     }
     @Override
     public void run() {
+        // leg til try catch her
         while(true) {
             queueLock.lock();
             Message msg = messageQueue.poll();
