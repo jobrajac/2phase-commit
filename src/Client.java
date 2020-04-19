@@ -22,6 +22,12 @@ abstract class Client implements Runnable {
             queueLock.lock();
             Message msg = messageQueue.poll();
             queueLock.unlock();
+            try {
+                Thread.sleep(100);
+            }
+            catch (Exception e) {
+
+            }
             if (msg != null) {
                 System.out.println(msg.getClient_id().toString() + ": " + msg.getMessage().toString());
                 handleMessage(msg);

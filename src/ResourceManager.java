@@ -10,10 +10,12 @@ public class ResourceManager extends Client {
     public void handleMessage(Message msg) {
         // For debugging. Ekko the value specified in debug.
         // If the value is NOREPLY don't reply.
-        if(msg.getDebug() != null) {
-            if(msg.getDebug() != messageTypes.NO_REPLY){
-                sendMessage(TM_HOST, TM_PORT, new Message(msg.getTransaction_id(), msg.getClient_id(), msg.getDebug()));
+        if(msg.isDebug()) {
+            messageTypes ans = msg.getDebugAnswers().get(msg.getClient_id().name()).get(msg.message);
+            if(ans != messageTypes.NO_REPLY) {
+                sendMessage(TM_HOST, TM_PORT, new Message(msg.getTransaction_id(), msg.getClient_id(), ans));
             }
+            return;
         }
         switch (msg.getMessage()) {
             case START:
