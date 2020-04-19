@@ -4,9 +4,9 @@ import java.util.Map;
 public class TM_State implements Serializable {
     private int transaction_id;
     private Map<String, Double> states;
-    TM_State(int transaction_id, Map<String, Double> rmSteps) {
+    TM_State(int transaction_id, Map<String, Double> states) {
         this.transaction_id = transaction_id;
-        this.states = rmSteps;
+        this.states = states;
     }
     double getState(String name) {
         return states.get(name);

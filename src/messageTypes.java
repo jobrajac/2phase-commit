@@ -11,5 +11,7 @@ public enum messageTypes {
     ROLLBACK_FAIL,
     UNDO,
     UNDO_OK,
-    UNDO_FAIL
+    UNDO_FAIL,
+    // For debugging:
+    NO_REPLY,
 }
