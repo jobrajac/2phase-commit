@@ -1,6 +1,6 @@
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.RandomAccessFile;
 import java.nio.channels.FileLock;
 import java.util.HashMap;
 
@@ -32,7 +32,7 @@ public class ResourceManager extends Client {
         return lock;
     }
 
-    public void setLock(FileLock lock) {
+    private void setLock(FileLock lock) {
         this.lock = lock;
     }
 
@@ -49,6 +49,9 @@ public class ResourceManager extends Client {
         }
         switch (msg.getMessage()) {
             case START:
+                RM_State newrm = new RM_State(msg.getTransaction_id(), msg.getData());
+                setSaved_state(newrm, msg.getTransaction_id());
+                setState(0, msg.getTransaction_id());
                 start(msg);
                 break;
             case COMMIT:
@@ -62,15 +65,12 @@ public class ResourceManager extends Client {
         }
     }
     private void start(Message msg) {
-        // Create and save state
-        RM_State transaction_state = new RM_State(msg.getTransaction_id(), msg.getData());
-        setSaved_state(transaction_state, msg.getTransaction_id());
-        setState(0, msg.getTransaction_id());
 
+        System.out.println(resourceFilePath);
         // Try to hold resources
         try {
-            FileInputStream in = new FileInputStream(resourceFilePath);
-            java.nio.channels.FileLock lock = in.getChannel().lock();
+            RandomAccessFile raf = new RandomAccessFile(resourceFilePath, "rw");
+            FileLock lock = raf.getChannel().lock();
             setLock(lock);
         }
         catch (Exception e) {

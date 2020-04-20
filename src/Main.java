@@ -24,9 +24,9 @@ public class Main {
         Participant[] rm = new Participant[]{Participant.A, Participant.B};
         Thread tm = new Thread(new TaskManager(Participant.TM.getPort(), rm));
         tm.start();
-        Thread a = new Thread(new ResourceManager(Participant.A.getPort(), Participant.TM.getHost(), Participant.TM.getPort(), "resources/a/", "saved_states/a/"));
+        Thread a = new Thread(new ResourceManager(Participant.A.getPort(), Participant.TM.getHost(), Participant.TM.getPort(), "resources/a/booksA.txt", "saved_states/a/"));
         a.start();
-        Thread b = new Thread(new ResourceManager(Participant.B.getPort(), Participant.TM.getHost(), Participant.TM.getPort(), "resources/b/", "saved_states/b/"));
+        Thread b = new Thread(new ResourceManager(Participant.B.getPort(), Participant.TM.getHost(), Participant.TM.getPort(), "resources/b/booksB.txt", "saved_states/b/"));
         b.start();
         try {
             // Create the socket
