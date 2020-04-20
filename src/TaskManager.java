@@ -42,39 +42,39 @@ public class TaskManager extends Client {
 
     @Override
     void handleMessage(Message msg) {
-        appendLog("Received message " + msg.getMessage() + " from " + msg.getClient_id(), msg.getTransaction_id());
-        switch (msg.getMessage()){
-            case TRANSACTION:
-                transaction(msg);
-                break;
-            case START_OK:
-                startOk(msg);
-                break;
-            case START_FAIL:
-                startFail(msg);
-                break;
-            case COMMIT_OK:
-                commitOk(msg);
-                break;
-            case COMMIT_FAIL:
-                commitFail(msg);
-                break;
-            case ROLLBACK_OK:
-                rollbackOK(msg);
-                break;
-            case ROLLBACK_FAIL:
-                rollbackFail(msg);
-                break;
-            case UNDO_OK:
-                undoOk(msg);
-                break;
-            case UNDO_FAIL:
-                undoFail(msg);
-                break;
-            default:
-                break;
+            appendLog("Received message " + msg.getMessage() + " from " + msg.getClient_id(), msg.getTransaction_id());
+            switch (msg.getMessage()) {
+                case TRANSACTION:
+                    transaction(msg);
+                    break;
+                case START_OK:
+                    startOk(msg);
+                    break;
+                case START_FAIL:
+                    startFail(msg);
+                    break;
+                case COMMIT_OK:
+                    commitOk(msg);
+                    break;
+                case COMMIT_FAIL:
+                    commitFail(msg);
+                    break;
+                case ROLLBACK_OK:
+                    rollbackOK(msg);
+                    break;
+                case ROLLBACK_FAIL:
+                    rollbackFail(msg);
+                    break;
+                case UNDO_OK:
+                    undoOk(msg);
+                    break;
+                case UNDO_FAIL:
+                    undoFail(msg);
+                    break;
+                default:
+                    break;
 
-        }
+            }
     }
 
 

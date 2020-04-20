@@ -9,30 +9,41 @@ import java.util.concurrent.locks.ReentrantLock;
 abstract class Client implements Runnable {
     private Queue<Message> messageQueue = new LinkedList<>();
     private final Lock queueLock = new ReentrantLock();
+    private Thread listener;
+    WSServer server;
 
     Client(int PORT) {
-        WSServer server = new WSServer(PORT, messageQueue, queueLock);
-        Thread listener = new Thread(server);
+        this.server = new WSServer(PORT, messageQueue, queueLock);
+        listener = new Thread(server);
         listener.start();
     }
     @Override
     public void run() {
-        // leg til try catch her
-        while(true) {
-            queueLock.lock();
-            Message msg = messageQueue.poll();
-            queueLock.unlock();
-            try {
-                Thread.sleep(100);
-            }
-            catch (Exception e) {
+        try {
+            while(true) {
+                Thread.sleep(1000);
+                if(Thread.interrupted()) {
+                    System.out.println("Client interrupted. Quitting.");
+                    server.close();
+                    return;
 
-            }
-            if (msg != null) {
-                System.out.println(msg.getClient_id().toString() + ": " + msg.getMessage().toString());
-                handleMessage(msg);
+                }
+                queueLock.lock();
+                Message msg = messageQueue.poll();
+                queueLock.unlock();
+                Thread.sleep(100);
+                if (msg != null) {
+                    System.out.println(msg.getClient_id().toString() + ": " + msg.getMessage().toString());
+                    handleMessage(msg);
+                }
             }
         }
+        catch (InterruptedException e) {
+            System.out.println("Client interrupted");
+            server.close();
+            return;
+        }
+
     }
     abstract void handleMessage(Message msg);
 
@@ -70,5 +81,4 @@ abstract class Client implements Runnable {
             System.err.println("Stack Trace: " + e.getStackTrace());
         }
     }
-
 }
