@@ -501,7 +501,7 @@ public class TaskManager extends Client {
     }
 
 
-    private String readLog(int trans_id) {
+    private String readLog(int trans_id)    {
         String fileName = logsFolderPath + trans_id + ".txt";
         try {
             return new String(Files.readAllBytes(Paths.get(fileName)));
