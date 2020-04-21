@@ -97,6 +97,7 @@ abstract class Client implements Runnable {
     // Has a timeout if a connection can not be made.
     boolean sendMessage(String HOST, int PORT, Message message) {
         try {
+//            Thread.sleep(2000); PUT DELAY HERE
             // Create the socket
             Socket clientSocket = new Socket();
             clientSocket.connect(new InetSocketAddress(HOST, PORT), TIMEOUT);

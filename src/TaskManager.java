@@ -20,12 +20,12 @@ class TaskManager extends Client {
         }
     }
 
-    public boolean isFailed() {
+    private boolean isFailed() {
         return failed;
     }
 
 
-    public void setFailed(boolean failed) {
+    private void setFailed(boolean failed) {
         this.failed = failed;
     }
 

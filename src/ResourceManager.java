@@ -89,6 +89,7 @@ public class ResourceManager extends Client {
         switch (msg.getMessage()) {
             // Save state if it does noe exist
             case START:
+                System.out.println("Got start: " + msg.getTransaction_id());
                 if(getSaved_state(msg.getTransaction_id()) == null) {
                     System.out.println("Data: " + msg.getData());
                     RM_State newrm = new RM_State(msg.getTransaction_id(), msg.getData());
@@ -113,25 +114,27 @@ public class ResourceManager extends Client {
     // If successfull, reply with START_OK, if not START_FAIL
     private void start(Message msg) {
         // Try to hold resources
-        try {
-            boolean writable = Files.isWritable(Paths.get(resourceFilePath));
-            if(!writable) {
-                throw new Exception();
-            }
-            raf = new RandomAccessFile(resourceFilePath, "rw");
-            FileLock lock = raf.getChannel().lock();
-            setLock(lock);
+        if(saved_states.size() == 1) {
+            try {
+                boolean writable = Files.isWritable(Paths.get(resourceFilePath));
+                if(!writable) {
+                    throw new Exception();
+                }
+                raf = new RandomAccessFile(resourceFilePath, "rw");
+                FileLock lock = raf.getChannel().lock();
+                setLock(lock);
 
-        }
-        catch (Exception e) {
-            System.out.println("ERROR reading logs");
-            System.err.println("Error: " + e.getMessage());
-            System.err.println("Localized: " + e.getLocalizedMessage());
-            System.err.println("Stack Trace: " + e.getStackTrace());
-            // Report failed
-            send(new Message(msg.getTransaction_id(), msg.getClient_id(), messageTypes.START_FAIL));
-            setState(2, msg.getTransaction_id());
-            transactionFinished(msg.getTransaction_id());
+            }
+            catch (Exception e) {
+                System.out.println("ERROR reading logs");
+                System.err.println("Error: " + e.getMessage());
+                System.err.println("Localized: " + e.getLocalizedMessage());
+                System.err.println("Stack Trace: " + e.getStackTrace());
+                // Report failed
+                send(new Message(msg.getTransaction_id(), msg.getClient_id(), messageTypes.START_FAIL));
+                setState(2, msg.getTransaction_id());
+                transactionFinished(msg.getTransaction_id());
+            }
         }
         //Report ok
         send(new Message(msg.getTransaction_id(), msg.getClient_id(), messageTypes.START_OK));
@@ -176,8 +179,15 @@ public class ResourceManager extends Client {
 
     // Release resources.
     private void rollback(Message msg) {
+        // If state is not set, reply with OK
+        // This will happen when a RM has replied with FAIL to TM before it has sent START to this
+        if(getSaved_state(msg.getTransaction_id()) == null) {
+            setSaved_state(new RM_State(msg.getTransaction_id(), null), msg.getTransaction_id());
+            setState(7, msg.getTransaction_id());
+            send(new Message(msg.getTransaction_id(), msg.getClient_id(), messageTypes.ROLLBACK_OK));
+        }
         // If state is 1 start rollback
-        if (getState(msg.getTransaction_id()) == 1) {
+        else if (getState(msg.getTransaction_id()) == 1) {
             try {
                 raf.close();
                 send(new Message(msg.getTransaction_id(), msg.getClient_id(), messageTypes.ROLLBACK_OK));
