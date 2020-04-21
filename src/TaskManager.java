@@ -8,10 +8,9 @@ public class TaskManager extends Client {
     private HashMap<Integer, TM_State> saved_states = new HashMap<>();
     private boolean failed = false;
     private final String stateFolderPath = "saved_states/tm/";
-    private final String logsFolderPath = "logs/tm/";
 
     TaskManager(int PORT, Participant[] resourceManagers){
-        super(PORT);
+        super(PORT, "logs/tm/");
         this.resourceManagers = resourceManagers;
         // Check if there is anything saved.
         this.saved_states = readSavedStates(new File(stateFolderPath));
@@ -262,8 +261,13 @@ public class TaskManager extends Client {
 
     private void start(Participant who, int trans_id) {
         Message start = new Message(trans_id, who, messageTypes.START);
-        send(who, start);
+        start.setData(getSaved_state(trans_id).getData());
+        boolean sent = send(who, start);
         setState(who, 0.1, trans_id);
+        if(!sent) {
+            appendLog("Could not send message START to " + who.name(), trans_id);
+            startFail(new Message(trans_id, who, messageTypes.START_FAIL));
+        }
     }
 
 
@@ -274,7 +278,7 @@ public class TaskManager extends Client {
         }
         // Sjekk om tilstand = 0.2 for alle rm
         for (Participant resourceManager1 : resourceManagers) {
-            if (getSaved_state(msg.getTransaction_id()).getState(resourceManager1.name()) == 0.1) {
+            if (getSaved_state(msg.getTransaction_id()).getState(resourceManager1.name()) != 0.2) {
                 System.out.println("Ikke alle har tilstand 0.2, " + resourceManager1.name());
                 return;
             }
@@ -317,8 +321,12 @@ public class TaskManager extends Client {
     private void commit(Participant who, int trans_id){
         // Send commit.
         Message commit = new Message(trans_id, who, messageTypes.COMMIT);
-        send(who, commit);
+        boolean sent = send(who, commit);
         setState(who, 1.1, trans_id);
+        if(!sent) {
+            appendLog("Could not send message COMMIT to " + who.name(), trans_id);
+            startFail(new Message(trans_id, who, messageTypes.COMMIT_FAIL));
+        }
     }
 
 
@@ -371,8 +379,12 @@ public class TaskManager extends Client {
     private void rollback(Participant who, int trans_id) {
         // Send rollback.
         Message rollback = new Message(trans_id, who, messageTypes.ROLLBACK);
-        send(who, rollback);
+        boolean sent = send(who, rollback);
         setState(who, 2.1, trans_id);
+        if(!sent) {
+            appendLog("Could not send message ROLLBACK to " + who.name(), trans_id);
+            startFail(new Message(trans_id, who, messageTypes.ROLLBACK_FAIL));
+        }
     }
 
 
@@ -413,8 +425,12 @@ public class TaskManager extends Client {
     private void undo(Participant who, int trans_id){
         // Send undo.
         Message undo = new Message(trans_id, who, messageTypes.UNDO);
-        send(who, undo);
+        boolean sent = send(who, undo);
         setState(who, 3.1, trans_id);
+        if(!sent) {
+            appendLog("Could not send message UNDO to " + who.name(), trans_id);
+            startFail(new Message(trans_id, who, messageTypes.UNDO_FAIL));
+        }
     }
 
 
@@ -457,15 +473,12 @@ public class TaskManager extends Client {
     private void transactionComplete(int trans_id) {
         System.out.println("\n");
         if(isFailed()) {
-            // Rapporter
             System.out.println("Transaction with id "+trans_id+" failed.");
         }
         else {
-            // Rapporter
             System.out.println("Transaction with id "+trans_id+" completed without any errors.");
         }
-        System.out.println("Printing logs:");
-        System.out.println(readLog(trans_id));
+
 
         // Delete saved transaction
         saved_states.remove(trans_id);
@@ -474,6 +487,7 @@ public class TaskManager extends Client {
 
             if(delete.delete())            {
                 System.out.println("Transaction-file deleted successfully");
+                appendLog("Transaction-file deleted.", trans_id);
             }
             else            {
                 System.out.println("Failed to delete transaction-file");
@@ -485,6 +499,9 @@ public class TaskManager extends Client {
             System.err.println("Localized: " + e.getLocalizedMessage());
             System.err.println("Stack Trace: " + e.getStackTrace());
         }
+
+        System.out.println("Printing logs:");
+        System.out.println(readLog(trans_id));
     }
 
 
@@ -516,32 +533,7 @@ public class TaskManager extends Client {
     }
 
 
-    private void appendLog(String append, int trans_id) {
-        try {
-            File log = new File(logsFolderPath + trans_id + ".txt");
-            log.createNewFile(); // if file already exists will do nothing
-            FileWriter writer = new FileWriter(log, true);
-            writer.append(append + "\n");
-            writer.close();
-
-        }
-        catch (Exception e) {
-            System.out.println("Error writing to logfile.");
-            System.err.println("Error: " + e.getMessage());
-            System.err.println("Localized: " + e.getLocalizedMessage());
-            System.err.println("Stack Trace: " + e.getStackTrace());
-        }
-
-//        TM_State tmp = getSaved_state(trans_id);
-//        String tmpLog = tmp.getLog();
-//        tmpLog += append + "\n";
-//        tmp.setLog(tmpLog);
-//        setSaved_state(tmp, trans_id);
-//        saveState(trans_id);
-    }
-
-
-    private void send(Participant who, Message message) {
+    private boolean send(Participant who, Message message) {
         appendLog("Sending " + message.getMessage() + " to " + message.getClient_id().name(), message.getTransaction_id());
         // Try catch this
         // Debugging
@@ -549,7 +541,7 @@ public class TaskManager extends Client {
             message.setDebug(true);
             message.setDebugAnswers(getSaved_state(message.getTransaction_id()).getDebugAnswers());
         }
-        sendMessage(who.getHost(), who.getPort(), message);
+        return sendMessage(who.getHost(), who.getPort(), message);
     }
 
 }

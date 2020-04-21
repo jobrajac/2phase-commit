@@ -1,8 +1,9 @@
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.nio.channels.FileLock;
 import java.util.HashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class ResourceManager extends Client {
     private String TM_HOST;
@@ -11,13 +12,15 @@ public class ResourceManager extends Client {
     private final String stateFolderPath;
     private final String resourceFilePath;
     private java.nio.channels.FileLock lock;
+    private RandomAccessFile raf;
 
-    public ResourceManager(int PORT, String TM_HOST, int TM_PORT, String resourceFilePath, String stateFolderPath) {
-        super(PORT);
+    public ResourceManager(int PORT, String TM_HOST, int TM_PORT, String resourceFilePath, String stateFolderPath, String logFilePath) {
+        super(PORT, logFilePath);
         this.TM_HOST = TM_HOST;
         this.TM_PORT = TM_PORT;
         this.stateFolderPath = stateFolderPath;
         this.resourceFilePath = resourceFilePath;
+        saved_states = readSavedStates(new File(stateFolderPath));
     }
 
     private RM_State getSaved_state(int id) {
@@ -28,7 +31,7 @@ public class ResourceManager extends Client {
         saved_states.put(id, saved_state);
     }
 
-    public FileLock getLock() {
+    private FileLock getLock() {
         return lock;
     }
 
@@ -36,8 +39,33 @@ public class ResourceManager extends Client {
         this.lock = lock;
     }
 
+    private HashMap<Integer, RM_State> readSavedStates(final File folder) {
+        HashMap<Integer, RM_State> saved_states = new HashMap<>();
+        try {
+            for (final File fileEntry : folder.listFiles()) {
+                try {
+                    FileInputStream is = new FileInputStream(fileEntry);
+                    ObjectInputStream ois = new ObjectInputStream(is);
+                    RM_State state = (RM_State) ois.readObject();
+                    saved_states.put(state.getTransaction_id(), state);
+                    ois.close();
+                    is.close();
+                }
+                catch (ClassNotFoundException | IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+        catch (NullPointerException e) {
+            return null;
+        }
+        return saved_states;
+    }
+
     @Override
     public void handleMessage(Message msg) {
+        appendLog("Got message " + msg.getMessage().name(), msg.getTransaction_id());
         // For debugging. Ekko the value specified in debug.
         // If the value is NOREPLY don't reply.
         if(msg.isDebug()) {
@@ -48,10 +76,14 @@ public class ResourceManager extends Client {
             return;
         }
         switch (msg.getMessage()) {
+            // Save state if it does noe exist
             case START:
-                RM_State newrm = new RM_State(msg.getTransaction_id(), msg.getData());
-                setSaved_state(newrm, msg.getTransaction_id());
-                setState(0, msg.getTransaction_id());
+                if(getSaved_state(msg.getTransaction_id()) == null) {
+                    System.out.println("Data: " + msg.getData());
+                    RM_State newrm = new RM_State(msg.getTransaction_id(), msg.getData());
+                    setSaved_state(newrm, msg.getTransaction_id());
+                    setState(0, msg.getTransaction_id());
+                }
                 start(msg);
                 break;
             case COMMIT:
@@ -66,10 +98,9 @@ public class ResourceManager extends Client {
     }
     private void start(Message msg) {
 
-        System.out.println(resourceFilePath);
         // Try to hold resources
         try {
-            RandomAccessFile raf = new RandomAccessFile(resourceFilePath, "rw");
+            raf = new RandomAccessFile(resourceFilePath, "rw");
             FileLock lock = raf.getChannel().lock();
             setLock(lock);
         }
@@ -80,20 +111,160 @@ public class ResourceManager extends Client {
             System.err.println("Stack Trace: " + e.getStackTrace());
             // Report failed
             send(new Message(msg.getTransaction_id(), msg.getClient_id(), messageTypes.START_FAIL));
+            setState(2, msg.getTransaction_id());
+            transactionFinished(msg.getTransaction_id());
         }
         //Report ok
         send(new Message(msg.getTransaction_id(), msg.getClient_id(), messageTypes.START_OK));
+        setState(1, msg.getTransaction_id());
     }
     private void commit(Message msg) {
-        send(new Message(msg.getTransaction_id(), msg.getClient_id(), messageTypes.COMMIT_OK));
+        // If the state is currentlu START_OK proceed with commit
+        if(getState(msg.getTransaction_id()) == 1) {
+            // Write data to file
+            try {
+                raf.seek(raf.length());
+                raf.write((getSaved_state(msg.getTransaction_id()).getData() + "\n").getBytes());
+                System.out.println("Successfully wrote to file.");
+                send(new Message(msg.getTransaction_id(), msg.getClient_id(), messageTypes.COMMIT_OK));
+                setState(4, msg.getTransaction_id());
+                deleteAfterTimeout(msg.getTransaction_id());
+            }
+            catch (Exception e) {
+                System.out.println("An error occurred writing to file.");
+                e.printStackTrace();
+                send(new Message(msg.getTransaction_id(), msg.getClient_id(), messageTypes.COMMIT_FAIL));
+                setState(5, msg.getTransaction_id());
+                transactionFinished(msg.getTransaction_id());
+            }
+        }
+        // If the state is COMMIT_OK the commit is already done, reply with OK.
+        else if (getState(msg.getTransaction_id()) == 4) {
+            send(new Message(msg.getTransaction_id(), msg.getClient_id(), messageTypes.COMMIT_OK));
+            deleteAfterTimeout(msg.getTransaction_id());
+        }
+        // If state is anything else, reply with fail
+        else {
+            send(new Message(msg.getTransaction_id(), msg.getClient_id(), messageTypes.COMMIT_FAIL));
+            setState(5, msg.getTransaction_id());
+            transactionFinished(msg.getTransaction_id());
+        }
     }
     private void rollback(Message msg) {
-        send(new Message(msg.getTransaction_id(), msg.getClient_id(), messageTypes.ROLLBACK_OK));
+        // If state is 1 start rollback
+        if (getState(msg.getTransaction_id()) == 1) {
+            try {
+                raf.close();
+                send(new Message(msg.getTransaction_id(), msg.getClient_id(), messageTypes.ROLLBACK_OK));
+                setState(7, msg.getTransaction_id());
+                transactionFinished(msg.getTransaction_id());
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                send(new Message(msg.getTransaction_id(), msg.getClient_id(), messageTypes.ROLLBACK_FAIL));
+                setState(8, msg.getTransaction_id());
+                transactionFinished(msg.getTransaction_id());
+            }
+        }
+        // If state is already rollback OK, send ok
+        else if(getState(msg.getTransaction_id()) == 5) {
+            send(new Message(msg.getTransaction_id(), msg.getClient_id(), messageTypes.ROLLBACK_OK));
+            transactionFinished(msg.getTransaction_id());
+        }
+        // if state is anything else, reply with fail
+        else {
+            send(new Message(msg.getTransaction_id(), msg.getClient_id(), messageTypes.ROLLBACK_FAIL));
+            setState(8, msg.getTransaction_id());
+            transactionFinished(msg.getTransaction_id());
+        }
     }
     private void undo(Message msg) {
-        send(new Message(msg.getTransaction_id(), msg.getClient_id(), messageTypes.UNDO_OK));
+        // If state is 4 start undo
+        if (getState(msg.getTransaction_id()) == 4) {
+            try {
+                long length = raf.length() - 1;
+                byte b;
+                do {
+                    length -= 1;
+                    raf.seek(length);
+                    b = raf.readByte();
+                } while(b != 10 && length>0);
+                raf.setLength(length+1);
+                raf.close();
+                getLock().close();
+                send(new Message(msg.getTransaction_id(), msg.getClient_id(), messageTypes.UNDO_OK));
+                setState(7, msg.getTransaction_id());
+                transactionFinished(msg.getTransaction_id());
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                send(new Message(msg.getTransaction_id(), msg.getClient_id(), messageTypes.UNDO_FAIL));
+                setState(11, msg.getTransaction_id());
+                transactionFinished(msg.getTransaction_id());
+            }
+        }
+        // If state is already undo OK, send ok
+        if(getState(msg.getTransaction_id()) == 10) {
+            send(new Message(msg.getTransaction_id(), msg.getClient_id(), messageTypes.UNDO_OK));
+            transactionFinished(msg.getTransaction_id());
+        }
+        // if state is anything else, reply with fail
+        else {
+            send(new Message(msg.getTransaction_id(), msg.getClient_id(), messageTypes.UNDO_FAIL));
+            setState(11, msg.getTransaction_id());
+            transactionFinished(msg.getTransaction_id());
+        }
     }
-
+    private void transactionFinished(int trans_id) {
+        // Delete saved transaction
+        saved_states.remove(trans_id);
+        try {
+            File delete = new File(stateFolderPath + trans_id + ".ser");
+            if(delete.delete())            {
+                System.out.println("Transaction-file deleted successfully");
+            }
+            else            {
+                System.out.println("Failed to delete transaction-file");
+            }
+        }
+        catch (Exception e) {
+            System.out.println("Could not delete transaction-file");
+            e.printStackTrace();
+        }
+        appendLog("Transaction finished and deleted.", trans_id);
+    }
+    // Method that gets called after commit_ok. If no new message is received for some time, the transaction gets deleted.
+    private void deleteAfterTimeout(int trans_id) {
+        System.out.println("STarting timeout");
+        ScheduledExecutorService scheduler
+                = Executors.newSingleThreadScheduledExecutor();
+        Runnable task = new Runnable() {
+            public void run() {
+                try {
+                    // Only delete if transaction is still in state COMMIT_OK
+                    if(getSaved_state(trans_id).getState() == 4) {
+                        // Delete saved transaction
+                        saved_states.remove(trans_id);
+                        File delete = new File(stateFolderPath + trans_id + ".ser");
+                        if(delete.delete())            {
+                            System.out.println("Transaction-file deleted successfully");
+                            appendLog("Timeout waiting for reply. Assuming transaction can be deleted.", trans_id);
+                        }
+                        else            {
+                            System.out.println("Failed to delete transaction-file");
+                        }
+                    }
+                }
+                catch (Exception e) {
+                    System.out.println("Could not delete transaction-file");
+                    e.printStackTrace();
+                }
+            }
+        };
+        int delay = 10;
+        scheduler.schedule(task, delay, TimeUnit.SECONDS);
+        scheduler.shutdown();
+    }
     private void saveState(int trans_id) {
         saveFile(getSaved_state(trans_id), stateFolderPath + trans_id + ".ser");
     }
@@ -104,7 +275,11 @@ public class ResourceManager extends Client {
         setSaved_state(tmp, trans_id);
         saveState(trans_id);
     }
+    private int getState(int trans_id) {
+        return getSaved_state(trans_id).getState();
+    }
     private void send(Message msg) {
+        appendLog("Sending message " + msg.getMessage().name(), msg.getTransaction_id());
         sendMessage(TM_HOST, TM_PORT, msg);
     }
 

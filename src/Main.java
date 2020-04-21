@@ -1,10 +1,24 @@
+import java.io.File;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 
 public class Main {
-    public static void main(String[] args) {
-        // Set a scenario. Decide what the nodes will reply.
+    public void cleanFolder(String path) {
+        File dir = new File(path);
+        for(File file: dir.listFiles())
+            if (!file.isDirectory())
+                file.delete();
+    }
+    public void cleanAllFolders() {
+        cleanFolder("logs/a");
+        cleanFolder("logs/b");
+        cleanFolder("logs/tm");
+        cleanFolder("saved_states/a");
+        cleanFolder("saved_states/b");
+        cleanFolder("saved_states/tm");
+    }
+    public HashMap<String, HashMap<messageTypes, messageTypes>> scenarioAllOk() {
         HashMap<String, HashMap<messageTypes, messageTypes>> debugAnswers = new HashMap<>();
 
         HashMap<messageTypes, messageTypes> aAnswers = new HashMap<>();
@@ -21,36 +35,53 @@ public class Main {
         bAnswers.put(messageTypes.UNDO, messageTypes.UNDO_OK);
         debugAnswers.put(Participant.B.name(), bAnswers);
 
+        return debugAnswers;
+    }
+    public static void main(String[] args) {
+
+        Main main = new Main();
+        main.cleanAllFolders();
+        // Setup of nodes
         Participant[] rm = new Participant[]{Participant.A, Participant.B};
         Thread tm = new Thread(new TaskManager(Participant.TM.getPort(), rm));
         tm.start();
-        Thread a = new Thread(new ResourceManager(Participant.A.getPort(), Participant.TM.getHost(), Participant.TM.getPort(), "resources/a/booksA.txt", "saved_states/a/"));
+        Thread a = new Thread(new ResourceManager(Participant.A.getPort(), Participant.TM.getHost(), Participant.TM.getPort(), "resources/a/booksA.txt", "saved_states/a/", "logs/a/"));
         a.start();
-        Thread b = new Thread(new ResourceManager(Participant.B.getPort(), Participant.TM.getHost(), Participant.TM.getPort(), "resources/b/booksB.txt", "saved_states/b/"));
+        Thread b = new Thread(new ResourceManager(Participant.B.getPort(), Participant.TM.getHost(), Participant.TM.getPort(), "resources/b/booksB.txt", "saved_states/b/", "logs/b/"));
         b.start();
+
         try {
             // Create the socket
             Socket clientSocket = new Socket(Participant.TM.getHost(), Participant.TM.getPort());
             // Create the input & output streams to the server
             ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-            Message send = new Message(12, Participant.OUTSIDE, messageTypes.TRANSACTION);
+
+
+            // Scenario 1. Every node replies with OK
+            HashMap<String, HashMap<messageTypes, messageTypes>> debugAnswers = main.scenarioAllOk();
+            Message send = new Message(1, Participant.OUTSIDE, messageTypes.TRANSACTION);
             // Adding data to message
-            send.setData("INSERT THIS INTO DATABASE");
-//            // Setting the answers defined above.
-            send.setDebug(true);
-            send.setDebugAnswers(debugAnswers);
+            send.setData("The Lion, the Witch and the Wardrobe");
+            // Setting the RM's predefined answers
+//            send.setDebug(true);
+//            send.setDebugAnswers(debugAnswers);
 
             outputStream.writeObject(send);
             outputStream.flush();
+
+            Thread.sleep(5000);
+//            tm.interrupt();
+//            tm = new Thread(new TaskManager(Participant.TM.getPort(), rm));
+//            tm.start();
+
+            tm.interrupt();
+            a.interrupt();
+            b.interrupt();
+
             outputStream.close();
             clientSocket.close();
-            Thread.sleep(2000);
-            tm.interrupt();
-            tm = new Thread(new TaskManager(Participant.TM.getPort(), rm));
-            tm.start();
-
-
-        } catch (Exception err) {
+        }
+        catch (Exception err) {
             System.err.println("Client Error: " + err.getMessage());
             System.err.println("Localized: " + err.getLocalizedMessage());
             System.err.println("Stack Trace: " + err.getStackTrace());

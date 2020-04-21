@@ -1,6 +1,7 @@
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Queue;
 import java.util.concurrent.locks.Lock;
 
@@ -45,7 +46,11 @@ public class WSServer implements Runnable{
                     clientSocket.close();
                 }
 
-            } catch (Exception e) {
+            }
+            catch (SocketException e) {
+                System.out.println("Socket interrupted");
+            }
+            catch (Exception e) {
                 System.err.println("Server Error: " + e.getMessage());
                 System.err.println("Localized: " + e.getLocalizedMessage());
                 System.err.println("Stack Trace: " + e.getStackTrace());
