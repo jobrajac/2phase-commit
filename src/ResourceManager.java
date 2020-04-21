@@ -1,5 +1,7 @@
 import java.io.*;
 import java.nio.channels.FileLock;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -8,10 +10,13 @@ import java.util.concurrent.TimeUnit;
 public class ResourceManager extends Client {
     private String TM_HOST;
     private int TM_PORT;
-    private HashMap<Integer, RM_State> saved_states = new HashMap<>();
+    // How long the RM will wait for the TM to send a message after a commit_ok has been sent.
+    private final int COMMIT_OK_TIMEOUT = 8; // seconds
+    private HashMap<Integer, RM_State> saved_states;
     private final String stateFolderPath;
     private final String resourceFilePath;
     private java.nio.channels.FileLock lock;
+    // The database. In this case a textfile
     private RandomAccessFile raf;
 
     public ResourceManager(int PORT, String TM_HOST, int TM_PORT, String resourceFilePath, String stateFolderPath, String logFilePath) {
@@ -23,21 +28,26 @@ public class ResourceManager extends Client {
         saved_states = readSavedStates(new File(stateFolderPath));
     }
 
+
     private RM_State getSaved_state(int id) {
         return saved_states.get(id);
     }
+
 
     private void setSaved_state(RM_State saved_state, int id) {
         saved_states.put(id, saved_state);
     }
 
+
     private FileLock getLock() {
         return lock;
     }
 
+
     private void setLock(FileLock lock) {
         this.lock = lock;
     }
+
 
     private HashMap<Integer, RM_State> readSavedStates(final File folder) {
         HashMap<Integer, RM_State> saved_states = new HashMap<>();
@@ -62,6 +72,7 @@ public class ResourceManager extends Client {
         }
         return saved_states;
     }
+
 
     @Override
     public void handleMessage(Message msg) {
@@ -96,13 +107,21 @@ public class ResourceManager extends Client {
                 undo(msg);
         }
     }
-    private void start(Message msg) {
 
+
+    // Received a transaction. Trying to set locks on database, and see if file is writable.
+    // If successfull, reply with START_OK, if not START_FAIL
+    private void start(Message msg) {
         // Try to hold resources
         try {
+            boolean writable = Files.isWritable(Paths.get(resourceFilePath));
+            if(!writable) {
+                throw new Exception();
+            }
             raf = new RandomAccessFile(resourceFilePath, "rw");
             FileLock lock = raf.getChannel().lock();
             setLock(lock);
+
         }
         catch (Exception e) {
             System.out.println("ERROR reading logs");
@@ -118,8 +137,11 @@ public class ResourceManager extends Client {
         send(new Message(msg.getTransaction_id(), msg.getClient_id(), messageTypes.START_OK));
         setState(1, msg.getTransaction_id());
     }
+
+
+    // Committing transaction. Writing to file.
     private void commit(Message msg) {
-        // If the state is currentlu START_OK proceed with commit
+        // If the state is currently START_OK proceed with commit
         if(getState(msg.getTransaction_id()) == 1) {
             // Write data to file
             try {
@@ -150,6 +172,9 @@ public class ResourceManager extends Client {
             transactionFinished(msg.getTransaction_id());
         }
     }
+
+
+    // Release resources.
     private void rollback(Message msg) {
         // If state is 1 start rollback
         if (getState(msg.getTransaction_id()) == 1) {
@@ -178,6 +203,9 @@ public class ResourceManager extends Client {
             transactionFinished(msg.getTransaction_id());
         }
     }
+
+
+    // Undo last transaction. Delete the line of the transaction, and then release resources.
     private void undo(Message msg) {
         // If state is 4 start undo
         if (getState(msg.getTransaction_id()) == 4) {
@@ -215,6 +243,9 @@ public class ResourceManager extends Client {
             transactionFinished(msg.getTransaction_id());
         }
     }
+
+
+    // Delete saved transaction
     private void transactionFinished(int trans_id) {
         // Delete saved transaction
         saved_states.remove(trans_id);
@@ -233,6 +264,8 @@ public class ResourceManager extends Client {
         }
         appendLog("Transaction finished and deleted.", trans_id);
     }
+
+
     // Method that gets called after commit_ok. If no new message is received for some time, the transaction gets deleted.
     private void deleteAfterTimeout(int trans_id) {
         System.out.println("STarting timeout");
@@ -261,10 +294,13 @@ public class ResourceManager extends Client {
                 }
             }
         };
-        int delay = 10;
+        // How long until interrupted
+        int delay = COMMIT_OK_TIMEOUT;
         scheduler.schedule(task, delay, TimeUnit.SECONDS);
         scheduler.shutdown();
     }
+
+
     private void saveState(int trans_id) {
         saveFile(getSaved_state(trans_id), stateFolderPath + trans_id + ".ser");
     }
@@ -275,9 +311,13 @@ public class ResourceManager extends Client {
         setSaved_state(tmp, trans_id);
         saveState(trans_id);
     }
+
+
     private int getState(int trans_id) {
         return getSaved_state(trans_id).getState();
     }
+
+
     private void send(Message msg) {
         appendLog("Sending message " + msg.getMessage().name(), msg.getTransaction_id());
         sendMessage(TM_HOST, TM_PORT, msg);

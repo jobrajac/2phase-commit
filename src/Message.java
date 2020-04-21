@@ -1,41 +1,44 @@
 import java.io.Serializable;
 import java.util.HashMap;
 
+// Class that gets sent over websockets between clients.
 public class Message implements Serializable {
     private int transaction_id;
     private Participant client_id;
     public messageTypes message;
-    public String data = null;
+    private String data = null;
+
+    // These two are for debugging purposes
     private boolean debug = false;
     private HashMap<String, HashMap<messageTypes, messageTypes>> debugAnswers = null;
 
-    public Message(int trans_id, Participant client_id, messageTypes message) {
+    Message(int trans_id, Participant client_id, messageTypes message) {
         this.transaction_id = trans_id;
         this.client_id = client_id;
         this.message = message;
     }
 
-    public String getData() {
+    String getData() {
         return data;
     }
 
-    public void setData(String data) {
+    void setData(String data) {
         this.data = data;
     }
 
-    public boolean isDebug() {
+    boolean isDebug() {
         return debug;
     }
 
-    public void setDebug(boolean debug) {
+    void setDebug(boolean debug) {
         this.debug = debug;
     }
 
-    public HashMap<String, HashMap<messageTypes, messageTypes>> getDebugAnswers() {
+    HashMap<String, HashMap<messageTypes, messageTypes>> getDebugAnswers() {
         return debugAnswers;
     }
 
-    public void setDebugAnswers(HashMap<String, HashMap<messageTypes, messageTypes>> debugAnswers) {
+    void setDebugAnswers(HashMap<String, HashMap<messageTypes, messageTypes>> debugAnswers) {
         this.debugAnswers = debugAnswers;
     }
 

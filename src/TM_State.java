@@ -2,7 +2,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TM_State implements Serializable {
+// Class that the TaskManager uses to track the state of a transaction
+class TM_State implements Serializable {
     private int transaction_id;
     private Map<String, Double> states;
     private String data;
@@ -16,37 +17,41 @@ public class TM_State implements Serializable {
         this.data = data;
     }
 
-    public String getData() {
+
+    String getData() {
         return data;
     }
 
-    public void setData(String data) {
-        this.data = data;
-    }
 
     double getState(String name) {
         return states.get(name);
     }
+
+
     void setState(String name, double step) {
         states.put(name, step);
     }
+
 
     int getTransaction_id() {
         return transaction_id;
     }
 
 
-    public boolean isDebug() {
+    boolean isDebug() {
         return debug;
     }
 
-    public void setDebug(boolean debug) {
+
+    void setDebug(boolean debug) {
         this.debug = debug;
     }
+
 
     HashMap<String, HashMap<messageTypes, messageTypes>> getDebugAnswers() {
         return debugAnswers;
     }
+
 
     void setDebugAnswers(HashMap<String, HashMap<messageTypes, messageTypes>> debugAnswers) {
         this.debugAnswers = debugAnswers;

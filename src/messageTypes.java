@@ -1,3 +1,4 @@
+// Enum to keep track of all acceptable messages
 public enum messageTypes {
     TRANSACTION,
     START,

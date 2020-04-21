@@ -1,3 +1,4 @@
+// Enum to keep track of all nodes
 public enum Participant {
     OUTSIDE("localhost", 9010),
     TM ("localhost", 9000),

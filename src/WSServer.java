@@ -5,16 +5,20 @@ import java.net.SocketException;
 import java.util.Queue;
 import java.util.concurrent.locks.Lock;
 
-public class WSServer implements Runnable{
+// Class to create a socket-server to receive incoming messages. Can be ran as a thread.
+public class WSServer implements Runnable {
     private Queue<Message> messageQueue;
     private final Lock queueLock;
     private final int PORT;
     private ServerSocket serversocket;
+
     WSServer(int PORT, Queue<Message> messageQueue, Lock queueLock) {
         this.messageQueue = messageQueue;
         this.queueLock = queueLock;
         this.PORT = PORT;
     }
+
+    // Close socket
     void close() {
         try {
             serversocket.close();

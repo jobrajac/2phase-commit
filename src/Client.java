@@ -6,7 +6,6 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -25,10 +24,11 @@ abstract class Client implements Runnable {
         listener.start();
     }
     @Override
+
+    // Polls queue for new received messages.
     public void run() {
         try {
             while(true) {
-//                Thread.sleep(1000);
                 if(Thread.interrupted()) {
                     System.out.println("Client interrupted. Quitting.");
                     server.close();
@@ -52,8 +52,13 @@ abstract class Client implements Runnable {
         }
 
     }
+
+
+    // After a message is received it needs to be handled.
     abstract void handleMessage(Message msg);
 
+
+    // Append text to logfile
     void appendLog(String append, int trans_id) {
         try {
             File log = new File(logsFolderPath + trans_id + ".txt");
@@ -71,6 +76,8 @@ abstract class Client implements Runnable {
         }
     }
 
+
+    // Save object to file
     void saveFile(Object object, String path) {
         try {
             FileOutputStream fout = new FileOutputStream(path);
@@ -79,14 +86,15 @@ abstract class Client implements Runnable {
             oos.close();
             fout.close();
         }
-        catch (Exception e) { // TODO fix this
+        catch (Exception e) {
             e.printStackTrace();
         }
 
     }
-//    Object[] readFiles(String directory){
-//        return Object[];
-//    }
+
+
+    // Send websocket message
+    // Has a timeout if a connection can not be made.
     boolean sendMessage(String HOST, int PORT, Message message) {
         try {
             // Create the socket

@@ -3,9 +3,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 
-public class TaskManager extends Client {
+// Class that handles the distribution of a transaction to different resourcemanagers.
+class TaskManager extends Client {
     private Participant[] resourceManagers;
-    private HashMap<Integer, TM_State> saved_states = new HashMap<>();
+    private HashMap<Integer, TM_State> saved_states;
     private boolean failed = false;
     private final String stateFolderPath = "saved_states/tm/";
 
