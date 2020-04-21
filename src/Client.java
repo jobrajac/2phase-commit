@@ -15,6 +15,7 @@ abstract class Client implements Runnable {
     private Thread listener;
     WSServer server;
     private final int TIMEOUT = 2000;
+    private int messageDelay = 0;
     String logsFolderPath;
 
     Client(int PORT, String logsFolderPath) {
@@ -57,7 +58,9 @@ abstract class Client implements Runnable {
     // After a message is received it needs to be handled.
     abstract void handleMessage(Message msg);
 
-
+    public void setMessageDelay(int delay) {
+        this.messageDelay = delay;
+    }
     // Append text to logfile
     void appendLog(String append, int trans_id) {
         try {
@@ -97,7 +100,9 @@ abstract class Client implements Runnable {
     // Has a timeout if a connection can not be made.
     boolean sendMessage(String HOST, int PORT, Message message) {
         try {
-//            Thread.sleep(2000); PUT DELAY HERE
+            if(messageDelay != 0) {
+                Thread.sleep(messageDelay);
+            }
             // Create the socket
             Socket clientSocket = new Socket();
             clientSocket.connect(new InetSocketAddress(HOST, PORT), TIMEOUT);

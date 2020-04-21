@@ -90,7 +90,8 @@ public class Main {
 
                 // Setup of nodes
                 Participant[] rm = new Participant[]{Participant.A, Participant.B};
-                Thread tm = new Thread(new TaskManager(Participant.TM.getPort(), rm));
+                TaskManager taskManager = new TaskManager(Participant.TM.getPort(), rm);
+                Thread tm = new Thread(taskManager);
                 tm.start();
                 Thread a = new Thread(new ResourceManager(Participant.A.getPort(), Participant.TM.getHost(), Participant.TM.getPort(), "resources/a/booksA.txt", "saved_states/a/", "logs/a/"));
                 a.start();
@@ -168,10 +169,22 @@ public class Main {
                         b.interrupt();
                         break;
                     case 5:
-                        // TODO add code like 4 here but wwith timeout
+                        taskManager.setMessageDelay(2000);
+                        // Example 5. Like 4 but with 2 sec delay on every message from tm
+                        send = new Message(4, Participant.OUTSIDE, messageTypes.TRANSACTION);
+                        // Adding data to message
+                        send.setData("The Lion, the Witch and the Wardrobe");
+
+                        outputStream.writeObject(send);
+                        outputStream.flush();
+                        Thread.sleep(12000);
+                        tm.interrupt();
+                        a.interrupt();
+                        b.interrupt();
+                        taskManager.setMessageDelay(0);
                         break;
                     case 6:
-                        // TODO add timeout here
+                        taskManager.setMessageDelay(1000);
                         // Example 6. TaskManager crashes
                         debugAnswers = main.scenarioAllOk();
                         send = new Message(6, Participant.OUTSIDE, messageTypes.TRANSACTION);
@@ -181,26 +194,27 @@ public class Main {
                         send.setDebugAnswers(debugAnswers);
                         outputStream.writeObject(send);
                         outputStream.flush();
-                        Thread.sleep(5000);
+                        Thread.sleep(2000);
                         tm.interrupt();
+                        Thread.sleep(2000);
                         tm = new Thread(new TaskManager(Participant.TM.getPort(), rm));
                         tm.start();
-                        Thread.sleep(10000);
+                        Thread.sleep(5000);
                         tm.interrupt();
                         a.interrupt();
                         b.interrupt();
-                        // TODO test!!
+                        taskManager.setMessageDelay(0);
                         break;
                     case 7:
                         // Example 7. B won't answer
                         b.interrupt();
-                        Thread.sleep(2000);
+                        Thread.sleep(300);
                         send = new Message(7, Participant.OUTSIDE, messageTypes.TRANSACTION);
                         // Adding data to message
                         send.setData("The Lion, the Witch and the Wardrobe");
                         outputStream.writeObject(send);
                         outputStream.flush();
-                        Thread.sleep(5000);
+                        Thread.sleep(10000);
                         tm.interrupt();
                         a.interrupt();
                         break;
