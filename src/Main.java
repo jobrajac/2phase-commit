@@ -81,7 +81,7 @@ public class Main {
             try {
 
                 Scanner in = new Scanner(System.in);
-                System.out.println("Enter the example you want to run [1 - 8]");
+                System.out.println("Enter the example you want to run [1 - 9]");
                 int ex = in.nextInt();
 
                 System.out.println("Sletter alle logger og alle lagrede tilstander.");
@@ -89,14 +89,37 @@ public class Main {
                 main.cleanAllFolders();
 
                 // Setup of nodes
-                Participant[] rm = new Participant[]{Participant.A, Participant.B};
-                TaskManager taskManager = new TaskManager(Participant.TM.getPort(), rm);
-                Thread tm = new Thread(taskManager);
-                tm.start();
-                Thread a = new Thread(new ResourceManager(Participant.A.getPort(), Participant.TM.getHost(), Participant.TM.getPort(), "resources/a/booksA.txt", "saved_states/a/", "logs/a/"));
-                a.start();
-                Thread b = new Thread(new ResourceManager(Participant.B.getPort(), Participant.TM.getHost(), Participant.TM.getPort(), "resources/b/booksB.txt", "saved_states/b/", "logs/b/"));
-                b.start();
+                Thread a;
+                Thread b;
+                Thread c;
+                Thread d;
+                Thread tm;
+                TaskManager taskManager;
+                Participant[] rm;
+                if(ex == 9) {
+                    rm = new Participant[]{Participant.A, Participant.B, Participant.C, Participant.D};
+                    taskManager = new TaskManager(Participant.TM.getPort(), rm);
+                    tm = new Thread(taskManager);
+                    tm.start();
+                    a = new Thread(new ResourceManager(Participant.A.getPort(), Participant.TM.getHost(), Participant.TM.getPort(), "resources/a/booksA.txt", "saved_states/a/", "logs/a/"));
+                    a.start();
+                    b = new Thread(new ResourceManager(Participant.B.getPort(), Participant.TM.getHost(), Participant.TM.getPort(), "resources/b/booksB.txt", "saved_states/b/", "logs/b/"));
+                    b.start();
+                    c = new Thread(new ResourceManager(Participant.C.getPort(), Participant.TM.getHost(), Participant.TM.getPort(), "resources/c/booksC.txt", "saved_states/c/", "logs/c/"));
+                    c.start();
+                    d = new Thread(new ResourceManager(Participant.D.getPort(), Participant.TM.getHost(), Participant.TM.getPort(), "resources/d/booksD.txt", "saved_states/d/", "logs/d/"));
+                    d.start();
+                }
+                else {
+                    rm = new Participant[]{Participant.A, Participant.B};
+                    taskManager = new TaskManager(Participant.TM.getPort(), rm);
+                    tm = new Thread(taskManager);
+                    tm.start();
+                    a = new Thread(new ResourceManager(Participant.A.getPort(), Participant.TM.getHost(), Participant.TM.getPort(), "resources/a/booksA.txt", "saved_states/a/", "logs/a/"));
+                    a.start();
+                    b = new Thread(new ResourceManager(Participant.B.getPort(), Participant.TM.getHost(), Participant.TM.getPort(), "resources/b/booksB.txt", "saved_states/b/", "logs/b/"));
+                    b.start();
+                }
 
                 // Create the socket
                 Socket clientSocket = new Socket(Participant.TM.getHost(), Participant.TM.getPort());
@@ -240,6 +263,18 @@ public class Main {
                         a.interrupt();
                         b.interrupt();
                         break;
+                    case 9:
+                        // Example 9. Four RM's
+                        send = new Message(10, Participant.OUTSIDE, messageTypes.TRANSACTION);
+                        // Adding data to message
+                        send.setData("The Lion, the Witch and the Wardrobe");
+
+                        outputStream.writeObject(send);
+                        outputStream.flush();
+                        Thread.sleep(5000);
+                        tm.interrupt();
+                        a.interrupt();
+                        b.interrupt();
 
                 }
                 outputStream.close();

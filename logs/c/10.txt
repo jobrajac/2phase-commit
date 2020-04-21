@@ -1,0 +1,9 @@
+Got message START
+Sending message START_OK
+Got message COMMIT
+Sending message COMMIT_OK
+Got message START
+Sending message START_OK
+Got message COMMIT
+Sending message COMMIT_OK
+Timeout waiting for reply. Assuming transaction can be deleted.
